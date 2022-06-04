@@ -43,6 +43,10 @@ mark {
   min-height: 80vh;
 }
 
+.text-justify {
+  text-align: justify;
+}
+
 /* typing effecct */
 @-webkit-keyframes typing {
   from {
@@ -67,46 +71,43 @@ mark {
     blink-caret 0.5s step-end infinite alternate;
 }
 
-
 /* jass */
 
 .navbar-brand {
   font-size: 2.5rem;
 }
 
-#typedtext{
+#typedtext {
   font-size: 4rem;
-  letter-spacing:0.5rem;
+  letter-spacing: 0.5rem;
 }
 
-.textpara{
-  font-size:24px;
+.textpara {
+  font-size: 24px;
 }
 
-.lenni{
+.lenni {
   font-size: 2rem;
 }
 
-
-@media (max-width: 1386px){
-  #typedtext{
+@media (max-width: 1386px) {
+  #typedtext {
     font-size: 3rem;
   }
 }
 
-.start-img{
-  width:	16rem;
+.start-img {
+  width: 16rem;
   position: relative;
-  top:5rem;
+  top: 5rem;
 }
 
-footer{
-  font-size:18px;
+footer {
+  font-size: 18px;
 }
 
-@media (max-width: 1629px){
-  .start-img
-  {
-    position:static;
+@media (max-width: 1629px) {
+  .start-img {
+    position: static;
   }
 }
