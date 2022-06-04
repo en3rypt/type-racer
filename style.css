@@ -4,7 +4,7 @@ html {
   overflow-x: hidden;
   width: 100vw;
 }
-@media (max-width: 1000px) {
+@media (max-width: 992px) {
   html {
     position: static;
   }
@@ -23,10 +23,10 @@ body {
 .k-img {
   max-width: 1200px;
   width: 65%;
-  transform: rotate(-26deg);
+  transform: rotate(-20.06deg);
   position: absolute;
-  right: -13rem;
-  top: 8rem;
+  right: -18rem;
+  top: 15rem;
   z-index: -100;
 }
 
@@ -65,4 +65,48 @@ mark {
   overflow: hidden;
   -webkit-animation: typing 2s steps(21, end),
     blink-caret 0.5s step-end infinite alternate;
+}
+
+
+/* jass */
+
+.navbar-brand {
+  font-size: 2.5rem;
+}
+
+#typedtext{
+  font-size: 4rem;
+  letter-spacing:0.5rem;
+}
+
+.textpara{
+  font-size:24px;
+}
+
+.lenni{
+  font-size: 2rem;
+}
+
+
+@media (max-width: 1386px){
+  #typedtext{
+    font-size: 3rem;
+  }
+}
+
+.start-img{
+  width:	16rem;
+  position: relative;
+  top:5rem;
+}
+
+footer{
+  font-size:18px;
+}
+
+@media (max-width: 1629px){
+  .start-img
+  {
+    position:static;
+  }
 }
