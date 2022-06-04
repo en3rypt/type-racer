@@ -1,3 +1,11 @@
+// const checkbox = document.getElementById('checkbox');
+
+// checkbox.addEventListener('change', () => {
+//     document.body.classList.toggle('dark');
+// })
+
+
+
 // set up text to print, each item in array is new line
 var aText = new Array(
     "Practice keyboarding.",
@@ -35,3 +43,5 @@ function typewriter() {
 
 
 typewriter();
+
+

@@ -1,19 +1,9 @@
-html {
-  position: fixed;
-  /* height: 100vw; */
-  overflow-x: hidden;
-  width: 100vw;
-}
-@media (max-width: 992px) {
-  html {
-    position: static;
-  }
-}
 body {
+  overflow-x: clip;
   font-family: "Special Elite", cursive;
   background-color: #f8f9fa;
   font-size: 22px;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 .start-img {
   max-width: 80%;
@@ -21,13 +11,24 @@ body {
 }
 
 .k-img {
+  /* overflow: clip; */
   max-width: 1200px;
-  width: 65%;
-  transform: rotate(-20.06deg);
+  /* width: 90%; */
+  position: relative;
+  right: -13rem;
+}
+.k-img1 {
+  /* float: right; */
+  overflow: clip;
+  /* max-width: 1200px;
+  width: 65%; */
+  /* transform: rotate(-20.06deg); */
   position: absolute;
-  right: -18rem;
-  top: 15rem;
+  right: 0;
+  top: 10rem;
   z-index: -100;
+  width: 60%;
+  height: 70vh;
 }
 
 .navbar-brand {
@@ -40,7 +41,7 @@ mark {
 }
 
 .justify {
-  min-height: 80vh;
+  min-height: 85vh;
 }
 
 .text-justify {
@@ -90,9 +91,19 @@ mark {
   font-size: 2rem;
 }
 
-@media (max-width: 1386px) {
+@media (max-width: 768px) {
   #typedtext {
     font-size: 3rem;
+  }
+}
+@media (max-width: 376px) {
+  #typedtext {
+    font-size: 2.2rem;
+  }
+}
+@media (max-width: 320px) {
+  #typedtext {
+    font-size: 1.8rem;
   }
 }
 
@@ -110,4 +121,50 @@ footer {
   .start-img {
     position: static;
   }
+}
+
+/* toggle */
+body.dark {
+  background-color: #292c35;
+}
+/* .checkbox {
+  opacity: 0;
+  position: absolute;
+}
+
+.label {
+  width: 50px;
+  height: 26px;
+  background-color: #111;
+  display: flex;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  position: relative;
+  transform: scale(1.5);
+}
+
+.ball {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  transition: transform 0.2s linear;
+}*/
+
+/*  target the elemenent after the label*/
+.checkbox:checked + .label .ball {
+  transform: translateX(24px);
+}
+
+.fa-moon {
+  color: pink;
+}
+
+.fa-sun {
+  color: yellow;
 }
