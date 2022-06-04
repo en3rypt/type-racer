@@ -3,6 +3,7 @@ body {
   background-color: #f8f9fa;
   font-size: 22px;
   overflow-x: hidden;
+  /* overflow-y: hidden; */
 }
 .start-img {
   max-width: 80%;
@@ -11,9 +12,10 @@ body {
 
 .k-img {
   width: 65%;
+  transform: rotate(-26deg);
   position: absolute;
-  right: 0;
-  top: 2rem;
+  right: -13rem;
+  top: 10rem;
   z-index: -100;
 }
 .navbar-brand {
@@ -45,10 +47,14 @@ mark {
   /* font: bold 300% Consolas, Monaco, monospace; */
   border-right: 0.1em solid black;
   width: 16.5em;
-  width: 5ch;
-  margin: 2em 1em;
+  width: 20ch;
+  /* margin: 2em 1em; */
   white-space: nowrap;
   overflow: hidden;
   -webkit-animation: typing 2s steps(21, end),
     blink-caret 0.5s step-end infinite alternate;
+}
+
+footer {
+  font-size: 0.6rem;
 }
