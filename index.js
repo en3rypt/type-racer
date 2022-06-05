@@ -29,6 +29,6 @@ app.get('/race', (req, res) => {
     res.render('pages/race')
 })
 //start server
-app.listen(PORT, () => {
+app.listen(process.env.PORT || PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
