@@ -1,6 +1,7 @@
 const text_fieldTag = document.querySelector('.typing-text p');
 const inpFieldTag = document.querySelector(".input-field");
 const tryAgainBtnTag = document.querySelector(".try-again-btn");
+const anotherOneBtnTag = document.querySelector(".try-again-btn.another-one-btn");
 const timeTag = document.querySelector('.time-left span');
 const mistakeTag = document.querySelector('.mistakes span');
 const wpmTag = document.querySelector('.wpm span');
@@ -15,7 +16,8 @@ let timer,
 
 
 function loadParagraph() {
-    const paragraphs = "Lorem ipsum dolor sit, amet consectetu adipisicing elit.Dolorum numquamesse quas utrepellendus fuga eligendi blanditiis est explicabo dolores";
+    // const paragraphs = "Lorem ipsum dolor sit, amet consectetu adipisicing elit.Dolorum numquamesse quas utrepellendus fuga eligendi blanditiis est explicabo dolores";
+    const paragraphs = text_fieldTag.innerText;
     text_fieldTag.innerHTML = "";
     paragraphs.split("").forEach(char => {
         let span = `<span>${char}</span>`
@@ -92,3 +94,6 @@ function resetGame() {
 loadParagraph();
 inpFieldTag.addEventListener("input", initTyping);
 tryAgainBtnTag.addEventListener("click", resetGame);
+anotherOneBtnTag.addEventListener("click", () => {
+    window.location.reload();
+});
