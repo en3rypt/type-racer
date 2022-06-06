@@ -30,7 +30,7 @@ body {
   top: 10rem;
   z-index: -100;
   width: 60%;
-  height: 70vh;
+  /* height: 70vh; */
 }
 
 .navbar-brand {
@@ -189,7 +189,7 @@ body.dark {
 }
 .wrapper .content-box {
   padding: 13px 20px 0;
-  border-radius:5px;
+  border-radius: 5px;
   border: 1px solid black;
 }
 .content-box .typing-text {
@@ -340,13 +340,11 @@ li:not(:first-child) span {
   }
 }
 
-
 /* grayscaling the avatar_images */
 
-.grayscale{
+.grayscale {
   filter: grayscale(1);
 }
-
 
 .jep {
   width: 100%;
