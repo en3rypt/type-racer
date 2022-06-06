@@ -58,10 +58,9 @@ function initTyping() {
 
         // Progress bar implementation\
         let paraLength = text_fieldTag.innerText.length;
-        progress = charIndex / paraLength;
-        if (progress > 0.99) {
-            progress = 1;
-        }
+        progress = charIndex / (paraLength - 1);
+        console.log(progress);
+
         // document.querySelector("#practice-prog").innerText = Math.ceil(progress * 100) + "%";
         document.querySelector("#practice-prog").style.width = Math.ceil(progress * 100) + "%"; //updating the progress bar
 
