@@ -10,7 +10,7 @@ const cpmTag = document.querySelector('.cpm span');
 let timer,
     maxTime = 60,
     timeLeft = maxTime,
-    charIndex = mistakes = isTyping = 0;
+    charIndex = mistakes = isTyping = progress = 0;
 
 
 
@@ -55,6 +55,15 @@ function initTyping() {
         }
         characters.forEach(span => span.classList.remove("active"));
         characters[charIndex].classList.add("active");
+
+        // Progress bar implementation\
+        let paraLength = text_fieldTag.innerText.length;
+        progress = charIndex / paraLength;
+        if (progress > 0.99) {
+            progress = 1;
+        }
+        // document.querySelector("#practice-prog").innerText = Math.ceil(progress * 100) + "%";
+        document.querySelector("#practice-prog").style.width = Math.ceil(progress * 100) + "%"; //updating the progress bar
 
         let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
         wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
