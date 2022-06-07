@@ -18,7 +18,7 @@ function createUserTrack(users) {
                 </div>
                 <div class="col-12 col-sm-9 col-md-10 pt-2">
                     <div class="progress" style="height: 8px;">
-                        <div id="progress-${users[key]}" class="progress-bar" role="progressbar"
+                        <div id="${key}" class="progress-bar" role="progressbar"
                             style="width: 0%; background-color:#212529 !important;" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100">
                         </div>
@@ -69,6 +69,11 @@ let timer,
     maxTime = 60,
     timeLeft = maxTime,
     charIndex = mistakes = isTyping = progress = 0;
+
+socket.on("progressBroadcast", (progress, clientId) => {
+    document.querySelector(`#${clientId}`).style.width = (progress * 100) + "%";
+});
+
 function loadParagraph() {
     // const paragraphs = "Lorem ipsum dolor sit, amet consectetu adipisicing elit.Dolorum numquamesse quas utrepellendus fuga eligendi blanditiis est explicabo dolores";
     const paragraphs = text_fieldTag.innerText;
@@ -119,17 +124,11 @@ function initTyping() {
 
         document.querySelector("#practice-prog").innerText = Math.ceil(progress * 100) + "%";
         //Updating the other client progress bars on progressBroadcast
-        socket.on("progressBroadcast", (progress, username) => {
-            // document.querySelectorAll('.progress-bar').forEach(bar => {
-            //     if (bar.id == "progress-" + username) {
-            //         bar.style.width = Math.ceil(progress * 100) + "%";
-            //     }
-            // });
-            document.querySelector(`#progress-${username}`).style.width = (progress * 100) + "%";
-        });
+        socket.emit("progress", progress, roomId);
 
 
-        socket.emit("progress", progress, roomId, username);
+
+
         let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
         wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
 
@@ -173,5 +172,5 @@ inpFieldTag.addEventListener("input", initTyping);
 // });
 
 
-module.exports = loadParagraph;
+// module.exports = loadParagraph;
 
