@@ -55,9 +55,12 @@ io.on('connection', (socket) => {
         console.log(rooms[room].users);
         // io.to(room).broadcast.emit('user-connected', name)
         io.to(room).emit('user-connected', rooms[room].users);
-    })
+    });
 
-
+    socket.on('progress', (progress, room, username) => {
+        // console.log(` In ${room}, ${username} is ${progress}% done.`);
+        io.to(room).emit('progressBroadcast', progress, username);
+    });
 
     socket.on('disconnect', () => {
         let room;
