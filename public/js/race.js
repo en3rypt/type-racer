@@ -1,39 +1,149 @@
 const socket = io();
+var d1 = document.getElementById("player-tracks");
+var w_text = document.getElementById("w_text");
+console.log(d1);
+if (username) {
+    socket.emit('new-user', roomId, username)
+}
+
+
+function createUserTrack(users) {
+    let s = '';
+    Object.keys(users).map((key, index) => {
+        s +=
+            `
+            <div class="row pt-5  text-md-center">
+                <div class="col-12 col-sm-3 col-md-2">
+                    <h4>${users[key]}: </h4>
+                </div>
+                <div class="col-12 col-sm-9 col-md-10 pt-2">
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar" role="progressbar"
+                            style="width: 25%; background-color:#212529 !important;" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    })
+    d1.innerHTML = s;
+}
+socket.on('user-connected', users => {
+    // console.log(users)
+    createUserTrack(users)
+    if (Object.keys(users).length > 1) {
+        w_text.innerHTML = "";
+    }
+})
+
+socket.on('user-disconnected', users => {
+    // console.log(users)
+    createUserTrack(users)
+    if (Object.keys(users).length <= 1) {
+        w_text.innerHTML = `
+        <div class="col">
+                <h2>Waiting for other players <span class="typing-effect">...</span></h2>
+        </div>
+        `;
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // socket.emit("hello", "world");
+
+// console.log(roomId);
+
 
 
 // socket.to('room1').emit("hello", "world");
-const makeid = () => {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < 10; i++) {
-        result += characters.charAt(Math.floor(Math.random() *
-            charactersLength));
-    }
-    return result;
-}
-socket.on('newuser', (data) => {
-    console.log(data);
-})
-document.getElementById("create-room").addEventListener("click", function () {
-    const id = makeid();
-    socket.emit('createRoom', id)
-    //redirect
-    // window.location.href = `/race?id=${id}`;
+// const makeid = () => {
+//     var result = '';
+//     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//     var charactersLength = characters.length;
+//     for (var i = 0; i < 10; i++) {
+//         result += characters.charAt(Math.floor(Math.random() *
+//             charactersLength));
+//     }
+//     return result;
+// }
+// socket.on('newuser', (data) => {
+//     console.log(data);
+// })
+// document.getElementById("create-room").addEventListener("click", function () {
+//     const id = makeid();
+//     socket.emit('createRoom', id)
+//     //redirect
+//     // window.location.href = `/race?id=${id}`;
 
 
-});
+// });
 
 
-document.getElementById("join-room").addEventListener("click", function () {
-    var room = document.getElementById("room-name").value;
-    if (room) {
-        socket.emit('joinroom', room)
-    } else {
-        alert("Please enter a room name")
-    }
-});
+// document.getElementById("join-room").addEventListener("click", function () {
+//     var room = document.getElementById("room-name").value;
+//     if (room) {
+//         socket.emit('joinroom', room)
+//     } else {
+//         alert("Please enter a room name")
+//     }
+// });
 // const text_fieldTag = document.querySelector('.typing-text p');
 // const inpFieldTag = document.querySelector(".input-field");
 // const tryAgainBtnTag = document.querySelector(".try-again-btn");

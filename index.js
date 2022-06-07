@@ -8,47 +8,89 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const fetch = require('node-fetch');
 const { createSocket } = require('dgram');
+var session = require('express-session');
+const e = require('cors');
 
+const rooms = {};
+const data = {};
 
+//user defined modules
+const makeid = () => {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < 10; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
 
+const getQuote = async () => {
+    apiList = [`https://free-quotes-api.herokuapp.com/`];
+    const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
+    try {
+        await fetch(apiURL)
+            .then(res => res.json())
+            .then(data => {
+                return data.quote;
 
+            });
+    } catch (err) {
+        return 0;
+    }
+}
 
-
-// const cors = require('cors')
 
 
 
 //scoket connection
 io.on('connection', (socket) => {
-    // console.log(socket.id);
+
+
+    //new code
+    socket.on('new-user', (room, name) => {
+        socket.join(room)
+        rooms[room].users[socket.id] = name
+        console.log(rooms[room].users);
+        // io.to(room).broadcast.emit('user-connected', name)
+        io.to(room).emit('user-connected', rooms[room].users);
+    })
+
+
+
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        let room;
+        console.log(`${socket.id} disconnected`);
+        Object.keys(rooms).forEach(function (room) {
+            if (rooms[room].users[socket.id]) {
+                delete rooms[room].users[socket.id]
+                console.log(rooms);
+                io.to(room).emit('user-disconnected', rooms[room].users);
+                return;
+            }
+        });
     });
-
-    socket.on('createRoom', (room) => {
-        //create room
-        socket.join(room);
-
-        console.log(room);
-    })
-    socket.on('joinroom', (room) => {
-
-        if (io.sockets.adapter.rooms.get(room)) {
-            console.log('success')
-            io.to(room).emit('newuser', "new user joined");
-        } else {
-            console.log('fail')
-        }
-    })
-
+    //new code end
 });
 
 
 //Middelware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 app.use(cors());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
+
+
+app.use(session({
+    secret: 's3cr3tT0k3n',
+    saveUninitialized: true,
+    resave: false
+}));
 
 
 //home route
@@ -60,7 +102,13 @@ app.get('/about', (req, res) => {
     res.render('pages/about');
 })
 app.get('/create', (req, res) => {
-    res.render('pages/create');
+    let user = req.session.user;
+    console.log(user);
+    if (!user) {
+
+        return res.render('pages/create');
+    }
+    return res.render('pages/race')
 })
 
 app.get('/practice', async (req, res) => {
@@ -83,8 +131,13 @@ app.get('/practice', async (req, res) => {
     }
 })
 
+
+
 app.get('/race', async (req, res) => {
-    console.log(req.query.id);
+    let user = req.session.user;
+    if (!user) {
+        return res.render('pages/create');
+    }
     apiList = [`https://free-quotes-api.herokuapp.com/`];
     const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
     try {
@@ -92,7 +145,7 @@ app.get('/race', async (req, res) => {
             .then(res => res.json())
             .then(data => {
                 const para = data.quote;
-                res.render('pages/race', {
+                return res.render('pages/race', {
                     para: para,
                     id: req.query.id
                 })
@@ -100,7 +153,54 @@ app.get('/race', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-    //res.render('pages/race')
+})
+
+app.post('/join', (req, res) => {
+    const username = req.body.user_name;
+    const roomname = req.body.room_name;
+    res.redirect(`/${roomname}/${req.body.user_name}`)
+})
+
+
+app.post('/race', async (req, res) => {
+    let id = makeid()
+    console.log(req.body.user_name, id)
+    rooms[id] = { users: {} }
+    res.redirect(`/${id}/${req.body.user_name}`)
+})
+
+app.get('/:room/:name', async (req, res) => {
+    if (rooms[req.params.room] == null) {
+        return res.redirect('/')
+    }
+    console.log(data);
+    if (!rooms[req.params.room].data) {
+        apiList = [`https://free-quotes-api.herokuapp.com/`];
+        const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
+        try {
+            await fetch(apiURL)
+                .then(res => res.json())
+                .then(data => {
+                    const quote_string = data.quote;
+                    rooms[req.params.room].data = quote_string;
+                    console.log(rooms[req.params.room])
+                    return res.render('pages/race', {
+                        para: quote_string,
+                        roomId: req.params.room,
+                        username: req.params.name
+                    })
+                });
+        } catch (err) {
+            console.log(err);
+        }
+    } else {
+        return res.render('pages/race', {
+            para: rooms[req.params.room].data,
+            roomId: req.params.room,
+            username: req.params.name
+        })
+    }
+
 })
 //start server
 http.listen(PORT, () => {

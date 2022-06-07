@@ -11,18 +11,23 @@
         <%- include('../partials/navbar'); %>
     </header>
 
-    <div class="container justify pt-5">
-        <input type="text" name="room-name" id="room-name">
-        <button id="join-room">Join Room</button> <br>
-        <!-- <input type="text" name="croom-name" id="croom-name"> -->
+    <form action="/join" method="POST">
+        <input type="text" name="user_name" id="user-name">
+        <input type="text" name="room_name" id="room-name">
+        <button id="join-room">Join Room</button>
+    </form>
+
+    <form action="/race" method="POST">
+        <input type="text" name="user_name">
         <button id="create-room">create room</button>
-    </div>
+    </form>
+
 
     <%- include('../partials/footer'); %>
         <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
             integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
             crossorigin="anonymous"></script>
-        <script src="/js/race.js"></script>
+        <!-- <script src="/js/create.js"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>

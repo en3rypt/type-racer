@@ -3,6 +3,10 @@
 
 <head>
     <%- include('../partials/head'); %>
+        <script>
+            const roomId = "<%= roomId %>";
+            const username = "<%= username %>";
+        </script>
         <title>Race</title>
 </head>
 
@@ -14,64 +18,17 @@
         <!-- Racers on track -->
         <div class="row">
             <div class="col">
-                <h2>Other racers on track:</h2>
+                <h3>Room ID: <%= roomId %>
+                </h3>
+                <h2>Racers on track:</h2>
             </div>
         </div>
         <!-- player track -->
-        <!-- <div class="row pt-5  text-md-center">
-            <div class="col-12 col-sm-3 col-md-2">
-                <h4>Player1: </h4>
-            </div>
-            <div class="col-12 col-sm-9 col-md-10 pt-2">
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar"
-                        style="width: 25%; background-color:#212529 !important;" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100">
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- <div class="row pt-3  text-md-center">
-            <div class="col-12 col-sm-3 col-md-2">
-                <h4>Player1: </h4>
-            </div>
-            <div class="col-12 col-sm-9 col-md-10 pt-2">
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar"
-                        style="width: 25%; background-color:#212529 !important;" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100">
-                    </div>
-                </div>
-            </div>
+        <div id="player-tracks">
         </div>
-        <div class="row pt-3  text-md-center">
-            <div class="col-12 col-sm-3 col-md-2">
-                <h4>Player1: </h4>
-            </div>
-            <div class="col-12 col-sm-9 col-md-10 pt-2">
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar"
-                        style="width: 25%; background-color:#212529 !important;" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row pt-3  text-md-center">
-            <div class="col-12 col-sm-3 col-md-2">
-                <h4>Player1: </h4>
-            </div>
-            <div class="col-12 col-sm-9 col-md-10 pt-2">
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar"
-                        style="width: 25%; background-color:#212529 !important;" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100">
-                    </div>
-                </div>
-            </div>
-        </div> -->
 
-        <div class="row text-center pt-5">
+
+        <div class="row text-center pt-5" id="w_text">
             <div class="col">
                 <h2>Waiting for other players <span class="typing-effect">...</span></h2>
             </div>
