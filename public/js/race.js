@@ -163,15 +163,14 @@ function resetGame() {
     wpmTag.innerText = 0;
     mistakeTag.innerText = 0;
     cpmTag.innerText = 0;
+    progress = 0;
 }
 
 // loadParagraph();
 inpFieldTag.addEventListener("input", initTyping);
-// tryAgainBtnTag.addEventListener("click", resetGame);
+tryAgainBtnTag.addEventListener("click", resetGame);
 // anotherOneBtnTag.addEventListener("click", () => {
 //     window.location.reload();
 // });
 
-
-module.exports = loadParagraph;
 
