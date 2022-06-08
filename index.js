@@ -197,6 +197,14 @@ app.get('/', (req, res) => {
     res.render('pages/index');
 });
 
+app.get('/signup', (req, res) => {
+    res.render('pages/signup');
+})
+
+app.get('/login', (req, res) => {
+    res.render('pages/login');
+})
+
 app.get('/about', (req, res) => {
     res.render('pages/about');
 })
