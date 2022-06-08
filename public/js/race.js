@@ -12,11 +12,14 @@ if (username) {
 }
 
 
+
 function createUserTrack(users, timer) {
+
     let s = '';
     Object.keys(users).map((key, index) => {
         s +=
             `
+
         <div class="row pt-5  text-md-center">
         <div class="col-12 col-sm-3 col-md-2">
         <h4 id='n${key}'>${users[key].name}: </h4>
@@ -33,11 +36,13 @@ function createUserTrack(users, timer) {
         <h4>${users[key].position}</h4>
         </div>
         </div>
+
         `
     })
     d1.innerHTML = s;
     document.querySelector('#matchTimer').innerText = `${timer}`;
 }
+
 
 socket.on('enableTyping', () => {
     loadParagraph();
@@ -71,6 +76,7 @@ socket.on('matchInit', () => {
 socket.on('user-connected', (users, timer) => {
     // console.log(users)
     createUserTrack(users, timer)
+
     if (Object.keys(users).length > 1) {
         w_text.innerHTML = "";
         // countDown = setInterval(countDownTimer, 1000);
@@ -89,8 +95,12 @@ socket.on('user-disconnected', users => {
     }
 })
 
-socket.on("progressBroadcast", (progress, clientId) => {
-    document.querySelector(`#c${clientId}`).style.width = (progress * 100) + "%";
+
+socket.on("progressBroadcast", (users, clientId) => {
+    Object.keys(users).forEach(function (key) {
+        document.querySelector(`#c${key}`).style.width = (users[key].progress * 100) + "%";
+        document.querySelector(`#p${key}`).innerHTML = users[key].position
+    });
 });
 
 
