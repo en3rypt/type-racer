@@ -33,7 +33,7 @@ function createUserTrack(users, timer) {
         </div>
         </div>
         <div class="col-1 col-sm-1 col-md-1">
-        <h4>${users[key].position}</h4>
+        <h4 id="p${key}">${users[key].position}</h4>
         </div>
         </div>
 
