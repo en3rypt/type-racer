@@ -34,6 +34,7 @@ socket.on('user-connected', users => {
     createUserTrack(users)
     if (Object.keys(users).length > 1) {
         w_text.innerHTML = "";
+        timer = setInterval(initTimer, 1000);
         loadParagraph();
     }
 })
@@ -74,6 +75,9 @@ socket.on("progressBroadcast", (progress, clientId) => {
     document.querySelector(`#${clientId}`).style.width = (progress * 100) + "%";
 });
 
+
+
+
 function loadParagraph() {
     // const paragraphs = "Lorem ipsum dolor sit, amet consectetu adipisicing elit.Dolorum numquamesse quas utrepellendus fuga eligendi blanditiis est explicabo dolores";
     const paragraphs = text_fieldTag.innerText;
@@ -93,10 +97,10 @@ function initTyping() {
     let characters = text_fieldTag.querySelectorAll("span");
     let typedChar = inpFieldTag.value.split("")[charIndex];
     if (charIndex < characters.length - 1 && timeLeft > 0) {
-        if (!isTyping) {
-            timer = setInterval(initTimer, 1000);
-            isTyping = true;
-        }
+        // if (!isTyping) {
+        //     timer = setInterval(initTimer, 1000);
+        //     isTyping = true;
+        // }
         if (typedChar == null) {
             if (charIndex > 0) {
                 charIndex--;
@@ -136,8 +140,9 @@ function initTyping() {
         mistakeTag.innerText = mistakes;
         cpmTag.innerText = charIndex - mistakes;
     } else {
-        clearInterval(timer);
+        // clearInterval(timer);
         inpFieldTag.value = "";
+
     }
     if (progress == 1) {
         document.querySelector(`.winning-text`).classList.remove('d-none');
@@ -158,9 +163,10 @@ function initTimer() {
 
 function resetGame() {
     loadParagraph();
-    clearInterval(timer);
-    timeLeft = maxTime;
-    charIndex = mistakes = isTyping = 0;
+    // clearInterval(timer);
+    // timeLeft = maxTime;
+    // charIndex = mistakes = isTyping = 0;
+    charIndex = mistakes = 0;
     inpFieldTag.value = "";
     timeTag.innerText = timeLeft;
     wpmTag.innerText = 0;
