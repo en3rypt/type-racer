@@ -42,13 +42,13 @@ const getQuote = async () => {
 }
 
 function setPosition(users) {
-    console.log('fuinction called');
+    // console.log('fuinction called');
     let userPositions = {}
     Object.keys(users).forEach(function (key) {
         userPositions[key] = users[key].progress;
 
     });
-    console.log(userPositions);
+    // console.log(userPositions);
     //sort userPositions
     let sorted = Object.keys(userPositions).sort(function (a, b) {
         return userPositions[b] - userPositions[a];
@@ -77,14 +77,21 @@ io.on('connection', (socket) => {
         // console.log(rooms[room].users);
 
         // io.to(room).broadcast.emit('user-connected', name)
-        io.to(room).emit('user-connected', rooms[room].users);
+        io.to(room).emit('user-connected', rooms[room].users, socket.id);
+        // io.sockets.connected[socket.id].emit('nameUpdate', socket.id);
+        //emit to particular socke
+        let users = rooms[room].users;
+        Object.keys(users).forEach(function (key) {
+            io.to(key).emit('nameUpdate', users[key].name, key);
+
+        });
     })
 
     socket.on('progress', (progress, room) => {
         console.log('in progress')
         rooms[room].users[socket.id].progress = progress;
         setPosition(rooms[room].users);
-        console.log(rooms[room].users);
+        // console.log(rooms[room].users);
         io.to(room).emit('progressBroadcast', rooms[room].users, socket.id);
     });
 
@@ -163,25 +170,8 @@ app.get('/practice', async (req, res) => {
 
 
 app.get('/race', async (req, res) => {
-    let user = req.session.user;
-    if (!user) {
-        return res.render('pages/create');
-    }
-    apiList = [`https://free-quotes-api.herokuapp.com/`];
-    const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
-    try {
-        await fetch(apiURL)
-            .then(res => res.json())
-            .then(data => {
-                const para = data.quote;
-                return res.render('pages/race', {
-                    para: para,
-                    id: req.query.id
-                })
-            });
-    } catch (err) {
-        console.log(err);
-    }
+    return res.render('pages/create');
+
 })
 
 app.post('/join', (req, res) => {

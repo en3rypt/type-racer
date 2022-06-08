@@ -7,14 +7,14 @@ if (username) {
 }
 
 
-function createUserTrack(users) {
+function createUserTrack(users, id) {
     let s = '';
     Object.keys(users).map((key, index) => {
         s +=
             `
             <div class="row pt-5  text-md-center">
                 <div class="col-12 col-sm-3 col-md-2">
-                    <h4>${users[key].name}: </h4>
+                    <h4 id="n${key}">${users[key].name}: </h4>
                 </div>
                 <div class="col-10 col-sm-8 col-md-9 pt-2">
                     <div class="progress" style="height: 8px;">
@@ -32,9 +32,13 @@ function createUserTrack(users) {
     })
     d1.innerHTML = s;
 }
-socket.on('user-connected', users => {
+
+socket.on('nameUpdate', (name, id) => {
+    document.querySelector(`#n${id}`).innerText = `${name}(You): `;
+})
+socket.on('user-connected', (users, id) => {
     // console.log(users)
-    createUserTrack(users)
+    createUserTrack(users, id)
     if (Object.keys(users).length > 1) {
         w_text.innerHTML = "";
         loadParagraph();
@@ -52,6 +56,7 @@ socket.on('user-disconnected', users => {
         `;
     }
 })
+
 
 socket.on("progressBroadcast", (users, clientId) => {
     Object.keys(users).forEach(function (key) {
