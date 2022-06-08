@@ -16,13 +16,16 @@ function createUserTrack(users) {
                 <div class="col-12 col-sm-3 col-md-2">
                     <h4>${users[key].name}: </h4>
                 </div>
-                <div class="col-12 col-sm-9 col-md-10 pt-2">
+                <div class="col-10 col-sm-8 col-md-9 pt-2">
                     <div class="progress" style="height: 8px;">
                         <div id="c${key}" class="progress-bar" role="progressbar"
                             style="width: ${users[key].progress * 100}%; background-color:#212529 !important;" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
+                </div>
+                <div class="col-1 col-sm-1 col-md-1">
+                <h4>${users[key].position}</h4>
                 </div>
             </div>
         `
