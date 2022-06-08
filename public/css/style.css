@@ -407,3 +407,60 @@ li:not(:first-child) span {
     display:block;
   }
 }
+
+
+/* Signup&Login-page - jass */
+
+#signup-btn, #login-btn{
+  text-decoration: underline;
+  background: none;
+  padding: 10px 20px;
+  border: none;
+  text-align: left;
+}
+.login-link, .signup-link{
+  text-align: left;
+text-decoration: underline;
+color:black;
+background: none;
+padding: 10px 20px;
+  border: none;
+}
+
+.login-link:hover, .signup-link:hover{
+  color:black;
+}
+
+.signup-input, .login-input{
+  width:90%;
+}
+.m-tw{
+  margin:0;
+}
+
+.signup-input input, .login-input input{
+  margin: 1rem 0;
+}
+
+.signup-big-text, .login-big-text{
+  padding-left:0;
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+#username-signup, #email-signup, #password-signup, #confirm-password-signup, #username-login, #password-login{
+  text-align: left;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+@media (max-width: 1440px){
+  .signup-big-text, .login-big-text {
+    font-size: 3rem;
+  }
+}
+@media (max-width: 992px){
+  .signup-big-text, .login-big-text {
+    font-size: 2.5rem;
+  }
+}
