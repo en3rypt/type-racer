@@ -41,6 +41,7 @@ const getQuote = async () => {
     }
 }
 
+
 function setPosition(users) {
     // console.log('fuinction called');
     let userPositions = {}
@@ -62,10 +63,23 @@ function setPosition(users) {
     });
 
 
-}
+
+// }
 
 
 //scoket connection
+
+const countDownTimer = (rooms) => {
+
+    if (rooms[room].timer > 0) {
+        io.to(room).emit('timer', rooms[room].timer)
+        rooms[room].timer--;
+    }
+    else {
+        io.to(room).emit('matchStart', 'True')
+    }
+
+}
 io.on('connection', (socket) => {
 
 
@@ -73,20 +87,56 @@ io.on('connection', (socket) => {
     socket.on('new-user', (room, name) => {
         let id = socket.id
         socket.join(room)
+        if (rooms[room].timer == null && rooms[room].matchTimer == null) {
+            rooms[room].timer = 10;
+            rooms[room].matchTimer = 120;
+
+
+        }
+        if (rooms[room].matchTimer < 120) {
+            io.to(socket.id).emit('enableTyping')
+        }
+
         rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
-        // console.log(rooms[room].users);
 
-        // io.to(room).broadcast.emit('user-connected', name)
-        io.to(room).emit('user-connected', rooms[room].users, socket.id);
-        // io.sockets.connected[socket.id].emit('nameUpdate', socket.id);
-        //emit to particular socke
+        console.log(rooms[room]);
+        //update new user (you)
         let users = rooms[room].users;
+
+
+        if (Object.keys(rooms[room].users).length == 2 && rooms[room].timer == 10) {
+            var Countdown = setInterval(function () {
+                if (rooms[room].timer > 0) {
+                    io.to(room).emit('timer', rooms[room].timer)
+                    rooms[room].timer--;
+                }
+                else {
+                    console.log('match started');
+                    io.to(room).emit('matchInit')
+                    clearInterval(Countdown);
+                    var MatchCountdown = setInterval(function () {
+                        if (rooms[room].matchTimer > 0) {
+                            io.to(room).emit('Matchtimer', rooms[room].matchTimer)
+                            rooms[room].matchTimer--;
+                        }
+                        else {
+                            console.log('match ended');
+                            io.to(room).emit('matchend')
+                            clearInterval(MatchCountdown);
+                        }
+                    }, 1000);
+                }
+            }, 1000);
+
+        }
+        io.to(room).emit('user-connected', rooms[room].users, rooms[room].matchTimer);
         Object.keys(users).forEach(function (key) {
-            io.to(key).emit('nameUpdate', users[key].name, key);
-
-        });
+            io.to(key).emit('nameUpdate', users[key].name, key)
+        })
     })
+    socket.on('matchTimer', (room) => {
 
+    })
     socket.on('progress', (progress, room) => {
         console.log('in progress')
         rooms[room].users[socket.id].progress = progress;
