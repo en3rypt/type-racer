@@ -1,7 +1,12 @@
+// const { set } = require("mongoose");
+
+
+
+
 const socket = io();
 var d1 = document.getElementById("player-tracks");
 var w_text = document.getElementById("w_text");
-console.log(d1);
+// console.log(d1);
 if (username) {
     socket.emit('new-user', roomId, username)
 }
@@ -12,32 +17,33 @@ function createUserTrack(users) {
     Object.keys(users).map((key, index) => {
         s +=
             `
-            <div class="row pt-5  text-md-center">
-                <div class="col-12 col-sm-3 col-md-2">
-                    <h4>${users[key].name}: </h4>
-                </div>
-                <div class="col-10 col-sm-8 col-md-9 pt-2">
-                    <div class="progress" style="height: 8px;">
-                        <div id="c${key}" class="progress-bar" role="progressbar"
-                            style="width: ${users[key].progress * 100}%; background-color:#212529 !important;" aria-valuenow="0"
-                            aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-1 col-sm-1 col-md-1">
-                <h4>${users[key].position}</h4>
-                </div>
-            </div>
+        <div class="row pt-5  text-md-center">
+        <div class="col-12 col-sm-3 col-md-2">
+        <h4>${users[key].name}: </h4>
+        </div>
+        <div class="col-10 col-sm-8 col-md-9 pt-2">
+        <div class="progress" style="height: 8px;">
+        <div id="c${key}" class="progress-bar" role="progressbar"
+        style="width: ${users[key].progress * 100}%; background-color:#212529 !important;" aria-valuenow="0"
+        aria-valuemin="0" aria-valuemax="100">
+        </div>
+        </div>
+        </div>
+        <div class="col-1 col-sm-1 col-md-1">
+        <h4>${users[key].position}</h4>
+        </div>
+        </div>
         `
     })
     d1.innerHTML = s;
 }
+let countLeft = 10;
 socket.on('user-connected', users => {
     // console.log(users)
     createUserTrack(users)
     if (Object.keys(users).length > 1) {
         w_text.innerHTML = "";
-        timer = setInterval(initTimer, 1000);
+        countDown = setInterval(countDownTimer, 1000);
         loadParagraph();
     }
 })
@@ -130,7 +136,7 @@ function initTyping() {
         // Progress bar implementation\
         let paraLength = text_fieldTag.innerText.length;
         progress = charIndex / (paraLength - 1);
-        console.log(progress);
+        // console.log(progress);
 
         document.querySelector("#practice-prog").innerText = Math.ceil(progress * 100) + "%";
         //Updating the other client progress bars on progressBroadcast
@@ -182,6 +188,23 @@ function resetGame() {
     document.querySelector(`.winning-text`).classList.add('d-none');
     document.querySelector(`.losing-text`).classList.add('d-none');
 }
+
+const countDownTimer = () => {
+    if (countLeft > 0) {
+        countLeft--;
+        document.querySelector('.count-down-timer').innerText = `${countLeft}`;
+    }
+    else {
+        timer = setInterval(initTimer, 1000);
+        clearInterval(countDown);
+    }
+}
+
+
+
+
+
+
 
 // loadParagraph();
 inpFieldTag.addEventListener("input", initTyping);

@@ -41,9 +41,9 @@ const getQuote = async () => {
     }
 }
 
-function setPosition(room, id) {
+// function setPosition(room, id) {
 
-}
+// }
 
 
 //scoket connection
