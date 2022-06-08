@@ -13,6 +13,11 @@
 
     <form action="/join" method="POST">
         <input type="text" name="user_name" id="user-name">
+        <!-- <% if(roomId){ %>
+            <input type="text" name="room_name" id="room-name" value="<%= roomId %>" disabled>
+            <% } else { %>
+                <input type="text" name="room_name" id="room-name">
+                <% } %> -->
         <input type="text" name="room_name" id="room-name">
         <button id="join-room">Join Room</button>
     </form>
