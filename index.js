@@ -115,6 +115,18 @@ io.on('connection', (socket) => {
                     io.to(room).emit('matchInit')
                     clearInterval(Countdown);
                     var MatchCountdown = setInterval(function () {
+                        var count = 0;
+                        let users = rooms[room].users;
+                        Object.keys(users).forEach(function (key) {
+                            if (users[key].progress == 1) {
+                                count++
+                            }
+                        })
+                        if (count == Object.keys(rooms[room].users).length) {
+                            console.log('match ended');
+                            io.to(room).emit('matchend');
+                            clearInterval(MatchCountdown);
+                        }
                         if (rooms[room].matchTimer > 0) {
                             io.to(room).emit('Matchtimer', rooms[room].matchTimer)
                             rooms[room].matchTimer--;
@@ -134,8 +146,8 @@ io.on('connection', (socket) => {
             io.to(key).emit('nameUpdate', users[key].name, key)
         })
     })
-    socket.on('matchTimer', (room) => {
-
+    socket.on('getTimeLeft', (room, fn) => {
+        fn(rooms[room].matchTimer)
     })
     socket.on('progress', (progress, room) => {
         console.log('in progress')
@@ -143,6 +155,7 @@ io.on('connection', (socket) => {
         setPosition(rooms[room].users);
         // console.log(rooms[room].users);
         io.to(room).emit('progressBroadcast', rooms[room].users, socket.id);
+
     });
 
     socket.on('disconnect', () => {

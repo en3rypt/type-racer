@@ -58,7 +58,7 @@ socket.on('timer', count => {
     document.querySelector('.count-down-timer').innerText = `${count}`;
 })
 socket.on('Matchtimer', count => {
-    console.log(count)
+    // console.log(count)
     document.querySelector('#matchTimer').innerText = `${count}`;
 })
 
@@ -121,7 +121,7 @@ const wpmTag = document.querySelector('.wpm span');
 const cpmTag = document.querySelector('.cpm span');
 
 let timer,
-    maxTime = 60,
+    maxTime = 120,
     timeLeft = maxTime,
     charIndex = mistakes = isTyping = progress = 0;
 
@@ -182,12 +182,15 @@ function initTyping() {
         socket.emit("progress", progress, roomId);
 
 
+        socket.emit('getTimeLeft', roomId, function (timeLeft) {
 
+            let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
 
-        let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
-        wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+            wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
 
-        wpmTag.innerText = wpm;
+            wpmTag.innerText = wpm;
+        })
+
         mistakeTag.innerText = mistakes;
         cpmTag.innerText = charIndex - mistakes;
     } else {
