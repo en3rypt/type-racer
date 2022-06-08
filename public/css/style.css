@@ -1,3 +1,7 @@
+/* div{
+  border: 1px solid red;
+} */
+
 body {
   overflow-x: clip;
   font-family: "Special Elite", cursive;
@@ -7,6 +11,7 @@ body {
   width: 100vw;
   /* overflow-x: auto; */
 }
+
 .start-img {
   max-width: 80%;
   width: 10rem;
@@ -350,4 +355,55 @@ li:not(:first-child) span {
 
 .jep {
   width: 100%;
+}
+
+/* CREATE PAGE STYLINGS - jass */
+#room-name, #user-name {
+  text-align: center;
+  /* font-size: 20px; */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#join-room{
+  text-decoration: underline;
+  background: none;
+  padding: 10px 20px;
+  border: none;
+}
+
+.p-10px {
+  padding:10px;
+}
+.kb-col{
+  text-align: right;
+}
+
+.kb-col img{
+  /* width: 100%; */
+  height: calc(100vh - 188px);
+}
+.make-join-con{
+  
+  /* border: 1px solid green; */
+  width:calc(50vh + 20%);
+  margin: 0;
+}
+
+@media (max-width: 1389px){
+  .make-join-con{
+    margin-right:20%;
+  }
+}
+
+@media (max-width: 1233px){
+  .make-join-con{
+    width:70%;
+  }
+  .kb-col{
+    display:none;
+  }
+  .kb-col2{
+    display:block;
+  }
 }
