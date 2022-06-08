@@ -64,7 +64,7 @@ function setPosition(users) {
 
 
 
-// }
+}
 
 
 //scoket connection
