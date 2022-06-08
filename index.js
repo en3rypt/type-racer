@@ -50,14 +50,16 @@ io.on('connection', (socket) => {
 
     //new code
     socket.on('new-user', (room, name) => {
+        let id = socket.id
         socket.join(room)
-        rooms[room].users[socket.id] = name
+        rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
         console.log(rooms[room].users);
         // io.to(room).broadcast.emit('user-connected', name)
         io.to(room).emit('user-connected', rooms[room].users);
-    });
+    })
 
     socket.on('progress', (progress, room) => {
+        rooms[room].users[socket.id].progress = progress;
         io.to(room).emit('progressBroadcast', progress, socket.id);
     });
 
@@ -67,7 +69,7 @@ io.on('connection', (socket) => {
         Object.keys(rooms).forEach(function (room) {
             if (rooms[room].users[socket.id]) {
                 delete rooms[room].users[socket.id]
-                // console.log(rooms);
+                console.log(rooms);
                 io.to(room).emit('user-disconnected', rooms[room].users);
                 return;
             }
@@ -97,8 +99,7 @@ app.use(session({
 
 //home route
 app.get('/', (req, res) => {
-    // console.log('home')
-    return res.render('pages/index');
+    res.render('pages/index');
 });
 
 app.get('/about', (req, res) => {
@@ -106,7 +107,7 @@ app.get('/about', (req, res) => {
 })
 app.get('/create', (req, res) => {
     let user = req.session.user;
-    // console.log(user);
+    console.log(user);
     if (!user) {
 
         return res.render('pages/create');
@@ -137,12 +138,9 @@ app.get('/practice', async (req, res) => {
 
 
 app.get('/race', async (req, res) => {
-    // console.log('in')
     let user = req.session.user;
     if (!user) {
-        return res.render('pages/create', {
-            roomId: null
-        });
+        return res.render('pages/create');
     }
     apiList = [`https://free-quotes-api.herokuapp.com/`];
     const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
@@ -154,24 +152,13 @@ app.get('/race', async (req, res) => {
                 return res.render('pages/race', {
                     para: para,
                     id: req.query.id
-
                 })
             });
     } catch (err) {
         console.log(err);
     }
 })
-// app.get('/:room', (req, res) => {
-//     let room = req.params.room;
-//     console.log('hi')
-//     console.log(room);
-//     if (rooms[room] == null) {
-//         return res.redirect('/')
-//     }
-//     res.render('pages/create', {
-//         roomID: room
-//     })
-// })
+
 app.post('/join', (req, res) => {
     const username = req.body.user_name;
     const roomname = req.body.room_name;
@@ -181,7 +168,7 @@ app.post('/join', (req, res) => {
 
 app.post('/race', async (req, res) => {
     let id = makeid()
-    // console.log(req.body.user_name, id)
+    console.log(req.body.user_name, id)
     rooms[id] = { users: {} }
     res.redirect(`/${id}/${req.body.user_name}`)
 })
@@ -190,7 +177,7 @@ app.get('/:room/:name', async (req, res) => {
     if (rooms[req.params.room] == null) {
         return res.redirect('/')
     }
-    // console.log(data);
+    console.log(data);
     if (!rooms[req.params.room].data) {
         apiList = [`https://free-quotes-api.herokuapp.com/`];
         const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
@@ -200,7 +187,7 @@ app.get('/:room/:name', async (req, res) => {
                 .then(data => {
                     const quote_string = data.quote;
                     rooms[req.params.room].data = quote_string;
-                    // console.log(rooms[req.params.room])
+                    console.log(rooms[req.params.room])
                     return res.render('pages/race', {
                         para: quote_string,
                         roomId: req.params.room,
