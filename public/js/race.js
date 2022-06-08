@@ -18,7 +18,7 @@ function createUserTrack(users) {
                 </div>
                 <div class="col-12 col-sm-9 col-md-10 pt-2">
                     <div class="progress" style="height: 8px;">
-                        <div id="${key}" class="progress-bar" role="progressbar"
+                        <div id="c${key}" class="progress-bar" role="progressbar"
                             style="width: 0%; background-color:#212529 !important;" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100">
                         </div>
@@ -71,7 +71,7 @@ let timer,
     charIndex = mistakes = isTyping = progress = 0;
 
 socket.on("progressBroadcast", (progress, clientId) => {
-    document.querySelector(`#${clientId}`).style.width = (progress * 100) + "%";
+    document.querySelector(`#c${clientId}`).style.width = (progress * 100) + "%";
 });
 
 function loadParagraph() {
