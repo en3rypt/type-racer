@@ -12,14 +12,14 @@ if (username) {
 }
 
 
-function createUserTrack(users) {
+function createUserTrack(users, timer) {
     let s = '';
     Object.keys(users).map((key, index) => {
         s +=
             `
         <div class="row pt-5  text-md-center">
         <div class="col-12 col-sm-3 col-md-2">
-        <h4>${users[key].name}: </h4>
+        <h4 id='n${key}'>${users[key].name}: </h4>
         </div>
         <div class="col-10 col-sm-8 col-md-9 pt-2">
         <div class="progress" style="height: 8px;">
@@ -36,14 +36,44 @@ function createUserTrack(users) {
         `
     })
     d1.innerHTML = s;
+    document.querySelector('#matchTimer').innerText = `${timer}`;
 }
-let countLeft = 10;
-socket.on('user-connected', users => {
+
+socket.on('enableTyping', () => {
+    loadParagraph();
+})
+
+socket.on('nameUpdate', (name, id) => {
+    document.querySelector(`#n${id}`).innerText = `${name}(You): `
+})
+
+
+socket.on('timer', count => {
+    // console.log(count)
+    document.querySelector('.count-down-timer').innerText = `${count}`;
+})
+socket.on('Matchtimer', count => {
+    console.log(count)
+    document.querySelector('#matchTimer').innerText = `${count}`;
+})
+
+socket.on('matchend', () => {
+    alert("Match Ended!")
+})
+socket.on('matchInit', () => {
+
+    loadParagraph();
+    document.querySelector('.count-down-timer').classList.add('d-none');
+    socket.emit('matchTimer', roomId)
+})
+
+
+socket.on('user-connected', (users, timer) => {
     // console.log(users)
-    createUserTrack(users)
+    createUserTrack(users, timer)
     if (Object.keys(users).length > 1) {
         w_text.innerHTML = "";
-        countDown = setInterval(countDownTimer, 1000);
+        // countDown = setInterval(countDownTimer, 1000);
     }
 })
 
@@ -188,18 +218,7 @@ function resetGame() {
     document.querySelector(`.losing-text`).classList.add('d-none');
 }
 
-const countDownTimer = () => {
-    if (countLeft > 0) {
-        countLeft--;
-        document.querySelector('.count-down-timer').innerText = `${countLeft}`;
-    }
-    else {
-        timer = setInterval(initTimer, 1000);
-        loadParagraph();
-        clearInterval(countDown);
-        document.querySelector('.count-down-timer').classList.add('d-none');
-    }
-}
+
 
 
 
