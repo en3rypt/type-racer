@@ -224,18 +224,23 @@ app.get('/race', async (req, res) => {
 
 })
 
-app.post('/join', (req, res) => {
-    const username = req.body.user_name;
-    const roomname = req.body.room_name;
-    res.redirect(`/${roomname}/${req.body.user_name}`)
-})
+// app.post('/join', (req, res) => {
+//     const username = req.body.user_name;
+//     const roomname = req.body.room_name;
+//     res.redirect(`/${roomname}/${req.body.user_name}`)
+// })
 
 
 app.post('/race', async (req, res) => {
-    let id = makeid()
-    // console.log(req.body.user_name, id)
-    rooms[id] = { users: {} }
-    res.redirect(`/${id}/${req.body.user_name}`)
+    const username = req.body.user_name;
+    const roomname = req.body.room_name;
+    if (roomname) {
+        res.redirect(`/${roomname}/${req.body.user_name}`)
+    } else {
+        let id = makeid()
+        rooms[id] = { users: {} }
+        res.redirect(`/${id}/${username}`)
+    }
 })
 
 app.get('/:room/:name', async (req, res) => {
