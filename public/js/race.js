@@ -139,6 +139,9 @@ function initTyping() {
         clearInterval(timer);
         inpFieldTag.value = "";
     }
+    if (progress == 1) {
+        document.querySelector(`.winning-text`).classList.remove('d-none');
+    }
 }
 
 function initTimer() {
@@ -148,6 +151,7 @@ function initTimer() {
         let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
         wpmTag.innerText = wpm;
     } else {
+        document.querySelector(`.losing-text`).classList.remove('d-none');
         clearInterval(timer);
     }
 }
@@ -162,7 +166,9 @@ function resetGame() {
     wpmTag.innerText = 0;
     mistakeTag.innerText = 0;
     cpmTag.innerText = 0;
-    progress = 0;
+    document.querySelector("#practice-prog").style.width = "0%";
+    document.querySelector(`.winning-text`).classList.add('d-none');
+    document.querySelector(`.losing-text`).classList.add('d-none');
 }
 
 // loadParagraph();

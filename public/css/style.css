@@ -210,6 +210,8 @@ body.dark {
 }
 .typing-text p span.correct {
   color: #56964f;
+  /* color:white;
+  background-color:black; */
 }
 .typing-text p span.incorrect {
   color: #cb3439;
