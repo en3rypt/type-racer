@@ -44,7 +44,6 @@ socket.on('user-connected', users => {
     if (Object.keys(users).length > 1) {
         w_text.innerHTML = "";
         countDown = setInterval(countDownTimer, 1000);
-        loadParagraph();
     }
 })
 
@@ -152,7 +151,7 @@ function initTyping() {
         mistakeTag.innerText = mistakes;
         cpmTag.innerText = charIndex - mistakes;
     } else {
-        // clearInterval(timer);
+        clearInterval(timer);
         inpFieldTag.value = "";
 
     }
@@ -196,7 +195,9 @@ const countDownTimer = () => {
     }
     else {
         timer = setInterval(initTimer, 1000);
+        loadParagraph();
         clearInterval(countDown);
+        document.querySelector('.count-down-timer').classList.add('d-none');
     }
 }
 
@@ -210,7 +211,7 @@ const countDownTimer = () => {
 inpFieldTag.addEventListener("input", initTyping);
 tryAgainBtnTag.addEventListener("click", resetGame);
 // anotherOneBtnTag.addEventListener("click", () => {
-//     window.location.reload();
-// });
+    //     window.location.reload();
+    // });
 
 
