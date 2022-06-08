@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 
 
         }
-        if (rooms[room].matchTimer < 120) {
+        if (rooms[room].matchTimer < 120 && rooms[room].matchTimer > 0) {
             io.to(socket.id).emit('enableTyping')
         }
 
