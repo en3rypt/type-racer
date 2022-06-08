@@ -41,7 +41,9 @@ const getQuote = async () => {
     }
 }
 
+function setPosition(room, id) {
 
+}
 
 
 //scoket connection
@@ -50,14 +52,16 @@ io.on('connection', (socket) => {
 
     //new code
     socket.on('new-user', (room, name) => {
+        let id = socket.id
         socket.join(room)
-        rooms[room].users[socket.id] = name
+        rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
         console.log(rooms[room].users);
         // io.to(room).broadcast.emit('user-connected', name)
         io.to(room).emit('user-connected', rooms[room].users);
-    });
+    })
 
     socket.on('progress', (progress, room) => {
+        rooms[room].users[socket.id].progress = progress;
         io.to(room).emit('progressBroadcast', progress, socket.id);
     });
 
