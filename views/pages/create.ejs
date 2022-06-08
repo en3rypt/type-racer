@@ -11,7 +11,9 @@
         <%- include('../partials/navbar'); %>
     </header>
 
-    <form action="/join" method="POST">
+
+
+    <!-- <form action="/join" method="POST">
         <input type="text" name="user_name" id="user-name">
         <input type="text" name="room_name" id="room-name">
         <button id="join-room">Join Room</button>
@@ -20,7 +22,40 @@
     <form action="/race" method="POST">
         <input type="text" name="user_name">
         <button id="create-room">create room</button>
-    </form>
+    </form> -->
+    <div class="pl-3 container-fluid  d-flex flex-column pt-5 justify text-center text-lg-start">
+        <!-- ONE SINGLE ROW -->
+        <div class="row">
+            <!-- LEFT HALF -->
+            <div class="col d-flex flex-column justify-content-center">
+                <!-- Container for the make/join -->
+                <div class="container make-join-con m-auto">
+                    <!-- name row -->
+                    <div style="font-size:2rem;" class="row my-3">
+                        You are:
+                    </div>
+                    <div class="row my-3 p-10px">
+                        <input type="text" name="user_name" placeholder="chad69" id="user-name" autocomplete="off">
+                    </div>
+                    <!-- track id row -->
+                    <div class="row my-3 p-10px">
+                        <input type="text" name="room_name" placeholder="Track you wanna join" id="room-name"
+                            autocomplete="off">
+                        *leave this empty to make a new track
+                    </div>
+                    <!-- button row -->
+                    <div class="row my-3">
+                        <button id="join-room">Join Room</button>
+                    </div>
+                </div>
+            </div>
+            <!-- RIGHT HALF -->
+            <div class="col kb-col">
+                <img src="/assets/keyboard-t.png" alt="kb-t">
+            </div>
+        </div>
+    </div>
+
 
 
     <%- include('../partials/footer'); %>
