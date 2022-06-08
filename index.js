@@ -41,7 +41,26 @@ const getQuote = async () => {
     }
 }
 
-function setPosition(room, id) {
+function setPosition(users) {
+    console.log('fuinction called');
+    let userPositions = {}
+    Object.keys(users).forEach(function (key) {
+        userPositions[key] = users[key].progress;
+
+    });
+    console.log(userPositions);
+    //sort userPositions
+    let sorted = Object.keys(userPositions).sort(function (a, b) {
+        return userPositions[b] - userPositions[a];
+    }
+    );
+    //update users position with sorted array
+    let i = 1;
+    sorted.forEach(function (key) {
+        users[key].position = i;
+        i++;
+    });
+
 
 }
 
@@ -55,14 +74,18 @@ io.on('connection', (socket) => {
         let id = socket.id
         socket.join(room)
         rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
-        console.log(rooms[room].users);
+        // console.log(rooms[room].users);
+
         // io.to(room).broadcast.emit('user-connected', name)
         io.to(room).emit('user-connected', rooms[room].users);
     })
 
     socket.on('progress', (progress, room) => {
+        console.log('in progress')
         rooms[room].users[socket.id].progress = progress;
-        io.to(room).emit('progressBroadcast', progress, socket.id);
+        setPosition(rooms[room].users);
+        console.log(rooms[room].users);
+        io.to(room).emit('progressBroadcast', rooms[room].users, socket.id);
     });
 
     socket.on('disconnect', () => {
@@ -71,7 +94,7 @@ io.on('connection', (socket) => {
         Object.keys(rooms).forEach(function (room) {
             if (rooms[room].users[socket.id]) {
                 delete rooms[room].users[socket.id]
-                console.log(rooms);
+                // console.log(rooms);
                 io.to(room).emit('user-disconnected', rooms[room].users);
                 return;
             }
@@ -109,7 +132,7 @@ app.get('/about', (req, res) => {
 })
 app.get('/create', (req, res) => {
     let user = req.session.user;
-    console.log(user);
+    // console.log(user);
     if (!user) {
 
         return res.render('pages/create');
@@ -170,7 +193,7 @@ app.post('/join', (req, res) => {
 
 app.post('/race', async (req, res) => {
     let id = makeid()
-    console.log(req.body.user_name, id)
+    // console.log(req.body.user_name, id)
     rooms[id] = { users: {} }
     res.redirect(`/${id}/${req.body.user_name}`)
 })
@@ -179,7 +202,7 @@ app.get('/:room/:name', async (req, res) => {
     if (rooms[req.params.room] == null) {
         return res.redirect('/')
     }
-    console.log(data);
+    // console.log(data);
     if (!rooms[req.params.room].data) {
         apiList = [`https://free-quotes-api.herokuapp.com/`];
         const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
@@ -189,7 +212,7 @@ app.get('/:room/:name', async (req, res) => {
                 .then(data => {
                     const quote_string = data.quote;
                     rooms[req.params.room].data = quote_string;
-                    console.log(rooms[req.params.room])
+                    // console.log(rooms[req.params.room])
                     return res.render('pages/race', {
                         para: quote_string,
                         roomId: req.params.room,

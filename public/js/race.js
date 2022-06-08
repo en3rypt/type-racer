@@ -25,7 +25,7 @@ function createUserTrack(users) {
                     </div>
                 </div>
                 <div class="col-1 col-sm-1 col-md-1">
-                <h4>${users[key].position}</h4>
+                <h4 id="p${key}">${users[key].position ? users[key].position : '-'}</h4>
                 </div>
             </div>
         `
@@ -53,8 +53,11 @@ socket.on('user-disconnected', users => {
     }
 })
 
-socket.on("progressBroadcast", (progress, clientId) => {
-    document.querySelector(`#c${clientId}`).style.width = (progress * 100) + "%";
+socket.on("progressBroadcast", (users, clientId) => {
+    Object.keys(users).forEach(function (key) {
+        document.querySelector(`#c${key}`).style.width = (users[key].progress * 100) + "%";
+        document.querySelector(`#p${key}`).innerHTML = users[key].position
+    });
 });
 
 
