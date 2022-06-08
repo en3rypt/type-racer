@@ -41,12 +41,45 @@ const getQuote = async () => {
     }
 }
 
-function setPosition(room, id) {
 
-}
+function setPosition(users) {
+    // console.log('fuinction called');
+    let userPositions = {}
+    Object.keys(users).forEach(function (key) {
+        userPositions[key] = users[key].progress;
+
+    });
+    // console.log(userPositions);
+    //sort userPositions
+    let sorted = Object.keys(userPositions).sort(function (a, b) {
+        return userPositions[b] - userPositions[a];
+    }
+    );
+    //update users position with sorted array
+    let i = 1;
+    sorted.forEach(function (key) {
+        users[key].position = i;
+        i++;
+    });
+
+
+
+// }
 
 
 //scoket connection
+
+const countDownTimer = (rooms) => {
+
+    if (rooms[room].timer > 0) {
+        io.to(room).emit('timer', rooms[room].timer)
+        rooms[room].timer--;
+    }
+    else {
+        io.to(room).emit('matchStart', 'True')
+    }
+
+}
 io.on('connection', (socket) => {
 
 
@@ -54,15 +87,62 @@ io.on('connection', (socket) => {
     socket.on('new-user', (room, name) => {
         let id = socket.id
         socket.join(room)
-        rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
-        console.log(rooms[room].users);
-        // io.to(room).broadcast.emit('user-connected', name)
-        io.to(room).emit('user-connected', rooms[room].users);
-    })
+        if (rooms[room].timer == null && rooms[room].matchTimer == null) {
+            rooms[room].timer = 10;
+            rooms[room].matchTimer = 120;
 
+
+        }
+        if (rooms[room].matchTimer < 120) {
+            io.to(socket.id).emit('enableTyping')
+        }
+
+        rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
+
+        console.log(rooms[room]);
+        //update new user (you)
+        let users = rooms[room].users;
+
+
+        if (Object.keys(rooms[room].users).length == 2 && rooms[room].timer == 10) {
+            var Countdown = setInterval(function () {
+                if (rooms[room].timer > 0) {
+                    io.to(room).emit('timer', rooms[room].timer)
+                    rooms[room].timer--;
+                }
+                else {
+                    console.log('match started');
+                    io.to(room).emit('matchInit')
+                    clearInterval(Countdown);
+                    var MatchCountdown = setInterval(function () {
+                        if (rooms[room].matchTimer > 0) {
+                            io.to(room).emit('Matchtimer', rooms[room].matchTimer)
+                            rooms[room].matchTimer--;
+                        }
+                        else {
+                            console.log('match ended');
+                            io.to(room).emit('matchend')
+                            clearInterval(MatchCountdown);
+                        }
+                    }, 1000);
+                }
+            }, 1000);
+
+        }
+        io.to(room).emit('user-connected', rooms[room].users, rooms[room].matchTimer);
+        Object.keys(users).forEach(function (key) {
+            io.to(key).emit('nameUpdate', users[key].name, key)
+        })
+    })
+    socket.on('matchTimer', (room) => {
+
+    })
     socket.on('progress', (progress, room) => {
+        console.log('in progress')
         rooms[room].users[socket.id].progress = progress;
-        io.to(room).emit('progressBroadcast', progress, socket.id);
+        setPosition(rooms[room].users);
+        // console.log(rooms[room].users);
+        io.to(room).emit('progressBroadcast', rooms[room].users, socket.id);
     });
 
     socket.on('disconnect', () => {
@@ -71,7 +151,7 @@ io.on('connection', (socket) => {
         Object.keys(rooms).forEach(function (room) {
             if (rooms[room].users[socket.id]) {
                 delete rooms[room].users[socket.id]
-                console.log(rooms);
+                // console.log(rooms);
                 io.to(room).emit('user-disconnected', rooms[room].users);
                 return;
             }
@@ -109,7 +189,7 @@ app.get('/about', (req, res) => {
 })
 app.get('/create', (req, res) => {
     let user = req.session.user;
-    console.log(user);
+    // console.log(user);
     if (!user) {
 
         return res.render('pages/create');
@@ -140,25 +220,8 @@ app.get('/practice', async (req, res) => {
 
 
 app.get('/race', async (req, res) => {
-    let user = req.session.user;
-    if (!user) {
-        return res.render('pages/create');
-    }
-    apiList = [`https://free-quotes-api.herokuapp.com/`];
-    const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
-    try {
-        await fetch(apiURL)
-            .then(res => res.json())
-            .then(data => {
-                const para = data.quote;
-                return res.render('pages/race', {
-                    para: para,
-                    id: req.query.id
-                })
-            });
-    } catch (err) {
-        console.log(err);
-    }
+    return res.render('pages/create');
+
 })
 
 app.post('/join', (req, res) => {
@@ -170,7 +233,7 @@ app.post('/join', (req, res) => {
 
 app.post('/race', async (req, res) => {
     let id = makeid()
-    console.log(req.body.user_name, id)
+    // console.log(req.body.user_name, id)
     rooms[id] = { users: {} }
     res.redirect(`/${id}/${req.body.user_name}`)
 })
@@ -179,7 +242,7 @@ app.get('/:room/:name', async (req, res) => {
     if (rooms[req.params.room] == null) {
         return res.redirect('/')
     }
-    console.log(data);
+    // console.log(data);
     if (!rooms[req.params.room].data) {
         apiList = [`https://free-quotes-api.herokuapp.com/`];
         const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
@@ -189,7 +252,7 @@ app.get('/:room/:name', async (req, res) => {
                 .then(data => {
                     const quote_string = data.quote;
                     rooms[req.params.room].data = quote_string;
-                    console.log(rooms[req.params.room])
+                    // console.log(rooms[req.params.room])
                     return res.render('pages/race', {
                         para: quote_string,
                         roomId: req.params.room,
