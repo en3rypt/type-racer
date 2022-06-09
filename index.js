@@ -89,11 +89,11 @@ io.on('connection', (socket) => {
         socket.join(room)
         if (rooms[room].timer == null && rooms[room].matchTimer == null) {
             rooms[room].timer = 10;
-            rooms[room].matchTimer = 120;
+            rooms[room].matchTimer = 60;
 
 
         }
-        if (rooms[room].matchTimer < 120 && rooms[room].matchTimer > 0) {
+        if (rooms[room].matchTimer < 60 && rooms[room].matchTimer > 0) {
             io.to(socket.id).emit('enableTyping')
         }
 

@@ -464,3 +464,11 @@ padding: 10px 20px;
     font-size: 2.5rem;
   }
 }
+
+
+
+/* Progress bar in race styling - jass */
+
+.user-name-race, .user-position{
+  display:inline-block;
+}
