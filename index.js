@@ -20,7 +20,7 @@ const makeid = () => {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 5; i++) {
         result += characters.charAt(Math.floor(Math.random() *
             charactersLength));
     }
@@ -46,6 +46,11 @@ const getQuote = async () => {
 function setPosition(users) {
     // console.log('fuinction called');
     let userPositions = {}
+    let finishedRace = []
+    Object.keys(users).forEach(key => {
+        if (users[key].progress >= 1)
+            finishedRace.push(users[key].name)
+    });
     Object.keys(users).forEach(function (key) {
         userPositions[key] = users[key].progress;
 
@@ -57,14 +62,13 @@ function setPosition(users) {
     }
     );
     //update users position with sorted array
-    let i = 1;
+    let i = finishedRace.length + 1;
     sorted.forEach(function (key) {
-        users[key].position = i;
-        i++;
+        if (finishedRace.indexOf(users[key].name) == -1) {
+            users[key].position = i;
+            i++;
+        }
     });
-
-
-
 }
 
 
@@ -100,7 +104,7 @@ io.on('connection', (socket) => {
 
         rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0, 'CPM': 0, 'WPM': 0, 'MISTAKES': 0 }
 
-        console.log(rooms[room]);
+        // console.log(rooms[room]);
         //update new user (you)
         let users = rooms[room].users;
 
@@ -112,7 +116,7 @@ io.on('connection', (socket) => {
                     rooms[room].timer--;
                 }
                 else {
-                    console.log('match started');
+                    // console.log('match started');
                     io.to(room).emit('matchInit')
                     clearInterval(Countdown);
                     var MatchCountdown = setInterval(function () {
@@ -124,7 +128,7 @@ io.on('connection', (socket) => {
                             }
                         })
                         if (count == Object.keys(rooms[room].users).length) {
-                            console.log('match ended1');
+                            // console.log('match ended1');
                             rooms[room].newGame = true;
                             io.to(room).emit('matchend');
                             clearInterval(MatchCountdown);
@@ -134,7 +138,7 @@ io.on('connection', (socket) => {
                             rooms[room].matchTimer--;
                         }
                         else {
-                            console.log('match ended2');
+                            // console.log('match ended2');
                             rooms[room].newGame = true;
                             io.to(room).emit('matchend')
                             clearInterval(MatchCountdown);
@@ -172,7 +176,7 @@ io.on('connection', (socket) => {
         fn(rooms[room].matchTimer)
     })
     socket.on('progress', (progress, room) => {
-        console.log('in progress')
+        // console.log('in progress')
         rooms[room].users[socket.id].progress = progress;
         setPosition(rooms[room].users);
         // console.log(rooms[room].users);
@@ -182,7 +186,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         let room;
-        console.log(`${socket.id} disconnected`);
+        // console.log(`${socket.id} disconnected`);
         Object.keys(rooms).forEach(function (room) {
             if (rooms[room].users[socket.id]) {
                 delete rooms[room].users[socket.id]
@@ -334,15 +338,4 @@ http.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
 
-
-const bioPicker = async () => {
-    //assign api to constant
-    const en3ryptBio = `https://api.github.com/users/en3rypt`;
-    const jassuwuBio = `https://api.github.com/users/jassuwu`;
-    const eb = await fetch(en3ryptBio).then(response => response.json());
-    console.log(eb.bio);
-    const jb = await fetch(jassuwuBio).then(response => response.json());
-    console.log(jb.bio);
-
-}
 
