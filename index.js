@@ -308,6 +308,12 @@ app.get('/:room/:name', async (req, res) => {
     }
 
 })
+
+app.get('*', function (req, res) {
+    res.status(202)
+    res.render('pages/404')
+});
+
 //start server
 http.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
