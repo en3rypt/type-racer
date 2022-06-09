@@ -88,12 +88,12 @@ io.on('connection', (socket) => {
         let id = socket.id
         socket.join(room)
         if (rooms[room].timer == null && rooms[room].matchTimer == null) {
-            rooms[room].timer = 3;
-            rooms[room].matchTimer = 5;
+            rooms[room].timer = 10;
+            rooms[room].matchTimer = 60;
 
 
         }
-        if (rooms[room].matchTimer < 5 && rooms[room].matchTimer > 0) {
+        if (rooms[room].matchTimer < 60 && rooms[room].matchTimer > 0) {
             io.to(socket.id).emit('enableTyping')
         }
 
@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
         let users = rooms[room].users;
 
 
-        if (Object.keys(rooms[room].users).length == 2 && rooms[room].timer == 3) {
+        if (Object.keys(rooms[room].users).length == 2 && rooms[room].timer == 10) {
             var Countdown = setInterval(function () {
                 if (rooms[room].timer > 0) {
                     io.to(room).emit('timer', rooms[room].timer)
