@@ -55,6 +55,11 @@ function createUserTrack(users, timer) {
     document.querySelector('#matchTimer').innerText = `${timer}`;
 }
 
+function displayStats(users) {
+
+
+
+}
 
 socket.on('enableTyping', () => {
     loadParagraph();
@@ -78,6 +83,9 @@ socket.on('matchend', () => {
     console.log('came in')
     document.getElementById('new-game-btn').classList.remove('d-none')
     reset.classList.add('d-none')
+    socket.emit("getstats", roomId, function (users) {
+
+    })
 
 })
 socket.on('matchInit', () => {
@@ -205,7 +213,9 @@ function initTyping() {
 
 
             mistakeTag.innerText = mistakes;
+            let cpm = charIndex - mistakes
             cpmTag.innerText = charIndex - mistakes;
+            socket.emit("Stats", roomId, wpm, cpm, mistakes)
         } else {
             clearInterval(timer);
             inpFieldTag.value = "";
