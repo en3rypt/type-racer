@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
             io.to(socket.id).emit('enableTyping')
         }
 
-        rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0 }
+        rooms[room].users[socket.id] = { 'name': name, "progress": 0, 'position': 0, 'CPM': 0, 'WPM': 0, 'MISTAKES': 0 }
 
         console.log(rooms[room]);
         //update new user (you)
@@ -149,6 +149,16 @@ io.on('connection', (socket) => {
             io.to(key).emit('nameUpdate', users[key].name, key)
         })
     })
+
+    socket.on('Stats', (room, wpm, cpm, mistakes) => {
+        rooms[room].users[socket.id].WPM = wpm
+        rooms[room].users[socket.id].CPM = cpm
+        rooms[room].users[socket.id].MISTAKES = mistakes
+    })
+
+    socket.on('getstats', (room, fn) => [
+        fn(rooms[room].users)
+    ])
 
     socket.on('newGame', (room, username) => {
         if (rooms[room].newGame) {
@@ -315,7 +325,7 @@ app.get('/:room/:name', async (req, res) => {
 })
 
 app.get('*', function (req, res) {
-    res.status(202)
+    res.status(404)
     res.render('pages/404')
 });
 

@@ -8,7 +8,7 @@ const mistakeTag = document.querySelector('.mistakes span');
 const wpmTag = document.querySelector('.wpm span');
 const cpmTag = document.querySelector('.cpm span');
 const newGamebtn = document.querySelector('#new-game-btn');
-
+const matchStats = document.querySelector('#matchStats')
 
 const socket = io();
 var d1 = document.getElementById("player-tracks");
@@ -77,7 +77,34 @@ socket.on('Matchtimer', count => {
 socket.on('matchend', () => {
     console.log('came in')
     document.getElementById('new-game-btn').classList.remove('d-none')
+    document.getElementById('player-tracks').classList.add('d-none')
     reset.classList.add('d-none')
+    socket.emit("getstats", roomId, function (users) {
+        let s = `
+        <h1 class="text-center">Results</h1>
+        <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">name</th>
+            <th scope="col">WPM</th>
+            <th scope="col">CPM</th>
+          </tr>
+        </thead>
+        <tbody>
+          `
+        Object.keys(users).map((key, index) => {
+            s += `<tr>
+            <th scope="row">${index + 1}</th>
+            <td>${users[key].name}</td>
+            <td>${users[key].WPM}</td>
+            <td>${users[key].CPM}</td>
+          </tr>`
+        })
+        s += `</tbody>
+        </table>`
+        matchStats.innerHTML = s;
+    })
 
 })
 socket.on('matchInit', () => {
@@ -205,7 +232,9 @@ function initTyping() {
 
 
             mistakeTag.innerText = mistakes;
+            let cpm = charIndex - mistakes
             cpmTag.innerText = charIndex - mistakes;
+            socket.emit("Stats", roomId, wpm, cpm, mistakes)
         } else {
             clearInterval(timer);
             inpFieldTag.value = "";
@@ -246,6 +275,8 @@ function resetGame() {
 
 function newGame() {
     socket.emit('newGame', roomId, username)
+    matchStats.innerHTML = ''
+    document.getElementById('player-tracks').classList.add('d-none')
     window.location.replace(`/${roomId}/${username}`)
 
 }
