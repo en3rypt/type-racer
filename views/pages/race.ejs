@@ -52,12 +52,7 @@
             <div class="col content">
                 <div class="wrapper">
                     <input type="text" class="input-field">
-                    <div class="progress" style="height: 8px;">
-                        <div id="practice-prog" class="progress-bar" role="progressbar"
-                            style="width: 0%; background-color:black!important;" aria-valuenow="0" aria-valuemin="0"
-                            aria-valuemax="100">
-                        </div>
-                    </div>
+
                     <div class="content-box">
                         <div class="typing-text">
                             <p>
@@ -83,8 +78,10 @@
             </div>
             <div class="row text-center py-4">
                 <div class="col">
-                    <button class="try-again-btn">Restart.</button>
-                    <!-- <button class="try-again-btn another-one-btn">Another one.</button> -->
+
+                    <a class="game-btn" href="/race">Leave.</a>
+                    <button class="game-btn" id="reset-btn">Reset.</button>
+                    <button class="game-btn d-none" id="new-game-btn">New Game.</button>
                 </div>
             </div>
             <div class="row text-center py-4">
