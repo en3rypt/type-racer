@@ -26,6 +26,7 @@
     "heroku": "^7.60.2",
     "mongoose": "^6.3.5",
     "nodemon": "^2.0.16",
+    "request": "^2.88.2",
     "socket.io": "^4.5.1"
   }
 }

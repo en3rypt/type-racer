@@ -10,6 +10,7 @@ const fetch = require('node-fetch');
 const { createSocket } = require('dgram');
 var session = require('express-session');
 const e = require('cors');
+const request = require('request');
 
 const rooms = {};
 const data = {};
@@ -216,8 +217,12 @@ app.get('/login', (req, res) => {
     res.render('pages/login');
 })
 
-app.get('/about', (req, res) => {
-    res.render('pages/about');
+app.get('/about', async (req, res) => {
+    const en3ryptBio = `https://api.github.com/users/en3rypt`;
+    const jassuwuBio = `https://api.github.com/users/jassuwu`;
+    const eb = await fetch(en3ryptBio).then(response => response.json());
+    const jb = await fetch(jassuwuBio).then(response => response.json());
+    res.render('pages/about', { jassuwu_status: jb.bio, en3rypt_status: eb.bio });
 })
 app.get('/create', (req, res) => {
     let user = req.session.user;
@@ -318,3 +323,16 @@ app.get('*', function (req, res) {
 http.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
+
+
+const bioPicker = async () => {
+    //assign api to constant
+    const en3ryptBio = `https://api.github.com/users/en3rypt`;
+    const jassuwuBio = `https://api.github.com/users/jassuwu`;
+    const eb = await fetch(en3ryptBio).then(response => response.json());
+    console.log(eb.bio);
+    const jb = await fetch(jassuwuBio).then(response => response.json());
+    console.log(jb.bio);
+
+}
+
