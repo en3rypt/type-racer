@@ -123,16 +123,18 @@ io.on('connection', (socket) => {
                             }
                         })
                         if (count == Object.keys(rooms[room].users).length) {
-                            console.log('match ended');
+                            console.log('match ended1');
+                            rooms[room].newGame = true;
                             io.to(room).emit('matchend');
                             clearInterval(MatchCountdown);
                         }
-                        if (rooms[room].matchTimer > 0) {
+                        if (rooms[room].matchTimer >= 0) {
                             io.to(room).emit('Matchtimer', rooms[room].matchTimer)
                             rooms[room].matchTimer--;
                         }
                         else {
-                            console.log('match ended');
+                            console.log('match ended2');
+                            rooms[room].newGame = true;
                             io.to(room).emit('matchend')
                             clearInterval(MatchCountdown);
                         }
@@ -145,6 +147,15 @@ io.on('connection', (socket) => {
         Object.keys(users).forEach(function (key) {
             io.to(key).emit('nameUpdate', users[key].name, key)
         })
+    })
+
+    socket.on('newGame', (room, username) => {
+        if (rooms[room].newGame) {
+            rooms[room] = { users: {}, newGame: false }
+            delete rooms[room].data;
+        }
+
+
     })
     socket.on('getTimeLeft', (room, fn) => {
         fn(rooms[room].matchTimer)

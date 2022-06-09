@@ -178,11 +178,12 @@ body.dark {
 
 /* Practice Page */
 
-.try-again-btn {
+.game-btn {
   text-decoration: underline;
   background: none;
   padding: 10px 20px;
   border: none;
+  color: #000;
   /* box-shadow: 0px 3px 6px 2px rgba(0, 0, 0, 0.5); */
   /* border-radius: 19px; */
 }
@@ -358,14 +359,15 @@ li:not(:first-child) span {
 }
 
 /* CREATE PAGE STYLINGS - jass */
-#room-name, #user-name {
+#room-name,
+#user-name {
   text-align: center;
   /* font-size: 20px; */
   padding: 10px;
   border-radius: 5px;
 }
 
-#join-room{
+#join-room {
   text-decoration: underline;
   background: none;
   padding: 10px 20px;
@@ -373,102 +375,112 @@ li:not(:first-child) span {
 }
 
 .p-10px {
-  padding:10px;
+  padding: 10px;
 }
-.kb-col{
+.kb-col {
   text-align: right;
 }
 
-.kb-col img{
+.kb-col img {
   /* width: 100%; */
   height: calc(100vh - 188px);
 }
-.make-join-con{
-  
+.make-join-con {
   /* border: 1px solid green; */
-  width:calc(50vh + 20%);
+  width: calc(50vh + 20%);
   margin: 0;
 }
 
-@media (max-width: 1389px){
-  .make-join-con{
-    margin-right:20%;
+@media (max-width: 1389px) {
+  .make-join-con {
+    margin-right: 20%;
   }
 }
 
-@media (max-width: 1233px){
-  .make-join-con{
-    width:70%;
+@media (max-width: 1233px) {
+  .make-join-con {
+    width: 70%;
   }
-  .kb-col{
-    display:none;
+  .kb-col {
+    display: none;
   }
-  .kb-col2{
-    display:block;
+  .kb-col2 {
+    display: block;
   }
 }
-
 
 /* Signup&Login-page - jass */
 
-#signup-btn, #login-btn{
+#signup-btn,
+#login-btn {
   text-decoration: underline;
   background: none;
   padding: 10px 20px;
   border: none;
   text-align: left;
 }
-.login-link, .signup-link{
+.login-link,
+.signup-link {
   text-align: left;
-text-decoration: underline;
-color:black;
-background: none;
-padding: 10px 20px;
+  text-decoration: underline;
+  color: black;
+  background: none;
+  padding: 10px 20px;
   border: none;
 }
 
-.login-link:hover, .signup-link:hover{
-  color:black;
+.login-link:hover,
+.signup-link:hover {
+  color: black;
 }
 
-.signup-input, .login-input{
-  width:90%;
+.signup-input,
+.login-input {
+  width: 90%;
 }
-.m-tw{
-  margin:0;
+.m-tw {
+  margin: 0;
 }
 
-.signup-input input, .login-input input{
+.signup-input input,
+.login-input input {
   margin: 1rem 0;
 }
 
-.signup-big-text, .login-big-text{
-  padding-left:0;
+.signup-big-text,
+.login-big-text {
+  padding-left: 0;
   font-size: 3.5rem;
   margin-bottom: 1rem;
 }
 
-#username-signup, #email-signup, #password-signup, #confirm-password-signup, #username-login, #password-login{
+#username-signup,
+#email-signup,
+#password-signup,
+#confirm-password-signup,
+#username-login,
+#password-login {
   text-align: left;
   padding: 10px;
   border-radius: 5px;
 }
 
-@media (max-width: 1440px){
-  .signup-big-text, .login-big-text {
+@media (max-width: 1440px) {
+  .signup-big-text,
+  .login-big-text {
     font-size: 3rem;
   }
 }
-@media (max-width: 992px){
-  .signup-big-text, .login-big-text {
+@media (max-width: 992px) {
+  .signup-big-text,
+  .login-big-text {
     font-size: 2.5rem;
   }
 }
-
-
 
 /* Progress bar in race styling - jass */
 
 .user-name-race, .user-position{
   display:inline-block;
 }
+
