@@ -2,10 +2,17 @@
   border: 1px solid red;
 } */
 
+:root {
+  /* --secondary-color: #f8f9fa;
+  --primary-color: #000; */
+  --primary-color: #f8f9fa;
+  --secondary-color: #000;
+}
 body {
   overflow-x: clip;
   font-family: "Special Elite", cursive;
-  background-color: #f8f9fa;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
   font-size: 22px;
   min-height: 100vh;
   width: 100vw;
@@ -43,8 +50,8 @@ body {
 }
 
 mark {
-  color: #f8f9fa;
-  background-color: #000;
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
 }
 
 .justify {
@@ -69,7 +76,7 @@ mark {
 
 .typing-effect {
   /* font: bold 300% Consolas, Monaco, monospace; */
-  border-right: 0.1em solid black;
+  border-right: 0.1em solid var(--secondary-color);
   width: 16.5em;
   width: 20ch;
   /* margin: 2em 1em; */
@@ -130,39 +137,6 @@ footer {
   }
 }
 
-/* toggle */
-body.dark {
-  background-color: #292c35;
-}
-/* .checkbox {
-  opacity: 0;
-  position: absolute;
-}
-
-.label {
-  width: 50px;
-  height: 26px;
-  background-color: #111;
-  display: flex;
-  border-radius: 50px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px;
-  position: relative;
-  transform: scale(1.5);
-}
-
-.ball {
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  border-radius: 50%;
-  transition: transform 0.2s linear;
-}*/
-
 /*  target the elemenent after the label*/
 .checkbox:checked + .label .ball {
   transform: translateX(24px);
@@ -183,7 +157,7 @@ body.dark {
   background: none;
   padding: 10px 20px;
   border: none;
-  color: #000;
+  color: var(--secondary-color);
   /* box-shadow: 0px 3px 6px 2px rgba(0, 0, 0, 0.5); */
   /* border-radius: 19px; */
 }
@@ -196,7 +170,7 @@ body.dark {
 .wrapper .content-box {
   padding: 13px 20px 0;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid var(--secondary-color);
 }
 .content-box .typing-text {
   overflow: hidden;
@@ -221,7 +195,7 @@ body.dark {
 }
 .typing-text p span.incorrect {
   color: #cb3439;
-  outline: 1px solid #fff;
+  outline: 1px solid var(--primary-color);
   background: #ffc0cb;
   border-radius: 4px;
 }
@@ -258,7 +232,7 @@ body.dark {
   outline: none;
   border: none;
   width: 105px;
-  color: #fff;
+  color: var(--primary-color);
   padding: 8px 0;
   font-size: 16px;
   cursor: pointer;
@@ -423,7 +397,7 @@ li:not(:first-child) span {
 .signup-link {
   text-align: left;
   text-decoration: underline;
-  color: black;
+  color: var(--secondary-color);
   background: none;
   padding: 10px 20px;
   border: none;
@@ -431,7 +405,7 @@ li:not(:first-child) span {
 
 .login-link:hover,
 .signup-link:hover {
-  color: black;
+  color: var(--secondary-color);
 }
 
 .signup-input,
