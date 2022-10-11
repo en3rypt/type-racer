@@ -4,14 +4,20 @@ dotenv.config();
 const faunadb = require('faunadb'),
     q = faunadb.query;
 
-let quotesdb = new faunadb.Client({
+const typiodb = new faunadb.Client({
+    secret: process.env.TYPIO_SECRET,
+    domain: 'db.us.fauna.com',
+});
+
+const quotesdb = new faunadb.Client({
     secret: process.env.TYPIO_QUOTES_SECRET,
-    // NOTE: Use the correct endpoint for your database's Region Group.
     endpoint: 'https://db.fauna.com/',
-})
+});
+
+const usersdb = new faunadb.Client({
+    secret: process.env.TYPIO_USERS_SECRET,
+    endpoint: 'https://db.fauna.com/',
+});
 
 
-
-
-
-module.exports = { quotesdb: quotesdb, q: q };
+module.exports = { typiodb: typiodb, usersdb: usersdb, quotesdb: quotesdb, q: q };

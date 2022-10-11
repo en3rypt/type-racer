@@ -16270,7 +16270,7 @@ let quotes = [{
     "quoteAuthor": "Tom Jackson"
 }]
 
-const { quotesdb, q } = require('./db')
+const { typiodb, usersdb, quotesdb, q } = require('./db')
 const getAllQuotes = async () => {
     try {
         const getQuotes = await quotesdb.query(q.Map(
@@ -16285,69 +16285,144 @@ const getAllQuotes = async () => {
     }
 };
 // getAllQuotes();
-
-
-
-const getQuoteCount = async () => {
+const getquoteCount = async () => {
     try {
-        const getQuoteCount = await quotesdb.query(q.Count(
+        const getquoteCount = await quotesdb.query(q.Count(
             q.Match(q.Index("all_quotes"))
         ))
-        return getQuoteCount
+        return getquoteCount
     } catch (e) {
         console.log({ error: e.message });
     }
 };
 
-const getQuote = async () => {
+// getAllQuotes();
+
+const createQuote = async (quote, ref) => {
     try {
-        const getQuote = await quotesdb.query(q.Map(
+        const createdQuote = await quotesdb.query(q.Create(
+            q.Ref(q.Collection('quotes'), ref),
+            {
+                data: quote,
+            },
+        ));
+        console.log(createdQuote);
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+quotes.forEach((quote) => {
+    createQuote(quote, quotes.indexOf(quote) + 1)
+})
+
+
+
+const getuserCount = async () => {
+    try {
+        const getuserCount = await usersdb.query(q.Count(
+            q.Match(q.Index("all_users"))
+        ))
+        return getuserCount
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+
+
+userDoc = {
+    username: "test",
+    email: "email",
+    password: "test"
+}
+
+const createUser = async (user) => {
+    try {
+        const createdUser = await usersdb.query(
+            q.Create(
+                q.Ref(q.Collection('users'), await getuserCount() + 1),
+                {
+                    data: user,
+                },
+            )
+        )
+        console.log(createdUser);
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+
+
+const getUser = async (username) => {
+    try {
+        const getUser = await usersdb.query(q.Map(
             q.Paginate(
-                q.Match(q.Index("quote_by_quoteid"), Math.floor(Math.random() * await getQuoteCount()))
+                q.Match(q.Index("user_by_username"), username)
             ),
             q.Lambda("X", q.Get(q.Var("X")))
-        ))
-        console.log(getQuote.data[0].ref);
+        ));
+        console.log(getUser.data[0].ref);
     } catch (e) {
         console.log({ error: e.message });
     }
 };
 
-getQuote();
 
 
-// const test = async () => {
-//     try {
-//         const getQuote = await quotesdb.query(q.Map(
-//             q.Paginate(q.Documents(q.Collection('quotes')), { size: 600 }),
-//             q.Lambda('x', q.Get(q.Var('x')))
-//         ));
-//         console.log(getQuote.data);
-//     } catch (e) {
-//         console.log({ error: e.message });
-//     }
-// };
-// test();
+
+//////////////////////////////////////////
 
 
-// const getQuote = await quotesdb.query(q.Map(
-//     q.Paginate(q.Documents(q.Collection('quotes')), { size: 600 }),
-//     q.Lambda('x', q.Get(q.Var('x')))
-// ));
-//THIS HAS BEEN USED AND COMMENTED.
-// const createQuote = async (quote) => {
-//     quote.id = quotes.indexOf(quote) + 1;
-//     try {
-//         const createQuote = await quotesdb.query(q.Create(
-//             q.Collection("quotes"),
-//             { data: quote }
-//         ))
-//         console.log(createQuote);
-//     } catch (e) {
-//         console.log({ error: e.message });
-//     }
-// };
-// quotes.forEach(quote => {
-//     createQuote(quote)
-//     // console.log(quote)
-// })
+const getGameCount = async () => {
+    try {
+        const getGameCount = await typiodb.query(q.Count(
+            q.Match(q.Index("all_games"))
+        ))
+        return getGameCount
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+
+gameDoc = {
+    gameQuoteID: "1",
+    gameUsername: "test",
+    gameScore: 0,
+    gameWPM: 0,
+    gameAccuracy: 0.0,
+}
+
+const createGame = async (game) => {
+    try {
+        gameData = {
+            gameQuote: q.Get(q.Ref(q.Collection('quotes'), game.gameQuoteID)),
+            gameUser: q.Select('ref', q.Get(q.Match(q.Index('user_by_username'), game.gameUsername))),
+            gameScore: game.gameScore,
+            gameWPM: game.gameWPM,
+            gameAccuracy: game.gameAccuracy,
+        }
+        const createdGame = await typiodb.query(
+            q.Create(
+                q.Ref(q.Collection('games'), await getGameCount() + 1),
+                {
+                    data: gameDate,
+                },
+            )
+        )
+        console.log(createdGame);
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
