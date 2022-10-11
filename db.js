@@ -4,10 +4,14 @@ dotenv.config();
 const faunadb = require('faunadb'),
     q = faunadb.query;
 
-let client = new faunadb.Client({
-    secret: process.env.FAUNAKEY,
+let quotesdb = new faunadb.Client({
+    secret: process.env.TYPIO_QUOTES_SECRET,
     // NOTE: Use the correct endpoint for your database's Region Group.
     endpoint: 'https://db.fauna.com/',
 })
 
-module.exports = { db: client, q: q };
+
+
+
+
+module.exports = { quotesdb: quotesdb, q: q };
