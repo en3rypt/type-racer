@@ -48,6 +48,7 @@ app.use('/create', create);
 app.use('/practice', practice);
 app.use('/race', race)
 app.use('/room', room)
+app.get('/profile', (req, res) => { res.render('pages/profile'); });
 app.get('*', (req, res) => { res.status(404).render('pages/404'); });
 
 
