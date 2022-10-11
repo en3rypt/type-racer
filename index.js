@@ -7,6 +7,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 var session = require('express-session');
 
+//Environment variables
+require('dotenv').config();
+
 // Static variables
 const PORT = process.env.PORT || 3000
 
