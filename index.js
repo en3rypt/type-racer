@@ -11,6 +11,7 @@ const { createSocket } = require('dgram');
 var session = require('express-session');
 const e = require('cors');
 const request = require('request');
+const { db, q } = require('./db');
 
 const rooms = {};
 const data = {};
@@ -27,20 +28,6 @@ const makeid = () => {
     return result;
 }
 
-const getQuote = async () => {
-    apiList = [`https://free-quotes-api.herokuapp.com/`];
-    const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
-    try {
-        await fetch(apiURL)
-            .then(res => res.json())
-            .then(data => {
-                return data.quote;
-
-            });
-    } catch (err) {
-        return 0;
-    }
-}
 
 
 function setPosition(users) {
@@ -72,7 +59,7 @@ function setPosition(users) {
 }
 
 
-//scoket connection
+//socket connection
 
 const countDownTimer = (rooms) => {
 
@@ -252,13 +239,14 @@ app.get('/practice', async (req, res) => {
     // GET request to the API endpoint using the fetch.
     // apiList = [`https://free-quotes-api.herokuapp.com/`, `https://animechan.vercel.app/api/random`, `https://programming-quotes-api.herokuapp.com/Quotes/random`, `https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw&type=single`];
     // Did not include the above list because the structure of the json file is different and have to figure it out.
-    apiList = [`https://free-quotes-api.herokuapp.com/`];
+    // apiList = [`https://free-quotes-api.herokuapp.com/`];
+    apiList = [`http://metaphorpsum.com/paragraphs/1/3?format=json`];
     const apiURL = apiList[Math.floor(Math.random() * apiList.length)];
     try {
         await fetch(apiURL)
             .then(res => res.json())
             .then(data => {
-                const para = data.quote;
+                const para = data.text;
                 res.render('pages/practice', {
                     para
                 })
@@ -328,10 +316,29 @@ app.get('/:room/:name', async (req, res) => {
 
 })
 
+
+app.get("/test", async (req, res) => {
+    console.log(db)
+    try {
+        const getProducts = await db.query(q.Map(
+            q.Paginate(
+                q.Match(q.Index("all_products"))
+            ),
+            q.Lambda("X", q.Get(q.Var("X")))
+        ));
+        res.status(200).json(getProducts);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+    // res.render("pages/test", test);
+});
+
+
 app.get('*', function (req, res) {
     res.status(404)
     res.render('pages/404')
 });
+
 
 //start server
 http.listen(PORT, () => {
