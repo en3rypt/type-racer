@@ -21,24 +21,28 @@
                 Log In.
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-3 d-lg-block d-flex justify-content-center">
-                <div class="signup-input d-flex flex-column justify-content-center">
-                    <input type="text" placeholder="@uniqueid" name="name-of-the-user" id="username-login" required>
-                    <input type="password" placeholder="shush-word" name="pw-of-the-user" id="password-login" required>
+        <form action="/login" method="post">
+            <div class="row">
+                <div class="col-lg-3 d-lg-block d-flex justify-content-center">
+
+                    <div class="signup-input d-flex flex-column justify-content-center">
+                        <input type="text" placeholder="@uniqueid" name="username" id="username" required>
+                        <input type="password" placeholder="shush-word" name="password" id="password" required>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col d-lg-block d-flex justify-content-center px-0">
+                    <div class="login-big-text">
+                        We'll take you right where you left off ^-^
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6 col d-lg-block d-flex justify-content-center px-0">
-                <div class="login-big-text">
-                    We'll take you right where you left off ^-^
+            <div class="row">
+                <div class="col-lg-3">
+                    <button id="login-btn">Log In</button>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3">
-                <button id="login-btn">Log In</button>
-            </div>
-        </div>
+        </form>
         <div class="row">
             <div class="col">
                 <a class="signup-link" href="/signup">New around here? Sign up.</a>

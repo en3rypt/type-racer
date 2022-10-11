@@ -12,12 +12,13 @@ const socket = io();
 let timer,
     maxTime = 60,
     timeLeft = maxTime,
-    charIndex = mistakes = isTyping = progress = 0;
+    charIndex = mistakes = isTyping = progress = 0, practiceEnd = false, totalLetters = 0;
 
 
 function loadParagraph() {
     // const paragraphs = "Lorem ipsum dolor sit, amet consectetu adipisicing elit.Dolorum numquamesse quas utrepellendus fuga eligendi blanditiis est explicabo dolores";
     const paragraphs = text_fieldTag.innerText;
+    totalLetters = paragraphs.length;
     text_fieldTag.innerHTML = "";
     paragraphs.split("").forEach(char => {
         let span = `<span>${char}</span>`
@@ -74,9 +75,10 @@ function initTyping() {
         clearInterval(timer);
         inpFieldTag.value = "";
     }
-    if (progress == 1) {
-        console.log(wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText);
+    if (progress == 1 && !practiceEnd) {
         document.querySelector(`.winning-text`).classList.remove('d-none');
+        socket.emit('practiceEnd', wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText, timeTag.innerText, totalLetters);
+        practiceEnd = true;
     }
 }
 
@@ -88,11 +90,14 @@ function initTimer() {
         wpmTag.innerText = wpm;
     } else {
         document.querySelector(`.losing-text`).classList.remove('d-none');
+        socket.emit('practiceEnd', wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText, -1, totalLetters);
         clearInterval(timer);
+        practiceEnd = true;
     }
 }
 
 function resetGame() {
+    practiceEnd = false;
     loadParagraph();
     clearInterval(timer);
     timeLeft = maxTime;

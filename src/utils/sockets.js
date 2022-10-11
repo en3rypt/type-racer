@@ -97,7 +97,15 @@ module.exports = (io) => {
             io.to(room).emit('progressBroadcast', rooms[room].users, socket.id);
 
         });
-
+        socket.on('practiceEnd', (wpm, mistake, cpm, timeleft, totalLetters) => {
+            console.log(wpm, mistake, cpm, timeleft);
+            let score1 = wpm - (mistake * 2) - (cpm / 10) - (timeleft / 10);
+            let score2 = wpm - (mistake * 2) + (timeleft / 10);
+            let score3 = (wpm - (mistake * 2)) * timeleft;
+            let score4 = (wpm - (mistake)) * timeleft;
+            let accuracy = ((totalLetters - mistake) / totalLetters) * 100;
+            console.log(score1, score2, score3, score4, accuracy);
+        });
         socket.on('disconnect', () => {
             let room;
             // console.log(`${socket.id} disconnected`);
@@ -111,5 +119,6 @@ module.exports = (io) => {
             });
         });
         //new code end
+
     });
 };
