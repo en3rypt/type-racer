@@ -14,13 +14,15 @@ const getQuoteCount = async () => {
 
 const getQuote = async () => {
     try {
-        const getQuote = await quotesdb.query(q.Map(
-            q.Paginate(
-                q.Match(q.Index("quote_by_quoteid"), Math.floor(Math.random() * await getQuoteCount()))
-            ),
-            q.Lambda("X", q.Get(q.Var("X")))
-        ))
-        return getQuote.data[0];
+        const getQuote = await quotesdb.query(
+            q.Get(
+                q.Ref(
+                    q.Collection('quotes'), String(Math.floor(Math.random() * (await getQuoteCount())))
+                )
+            )
+        );
+        // console.log(getQuote);
+        return getQuote;
     } catch (e) {
         console.log({ error: e.message });
     }
@@ -41,7 +43,7 @@ practice.get('/', async (req, res) => {
         const para = await getQuote();
         res.render('pages/practice', {
             quote: para.data.quoteText,
-            ref: para.ref
+            refid: para.ref.id,
         })
         // });
     } catch (err) {
