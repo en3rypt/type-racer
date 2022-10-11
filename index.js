@@ -5,7 +5,7 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const cors = require('cors');
 const bodyParser = require('body-parser');
-var session = require('express-session');
+const session = require('express-session');
 
 //Environment variables
 require('dotenv').config();
@@ -26,7 +26,7 @@ const room = require('./src/routes/room');
 //socket connection
 require('./src/utils/sockets')(io);
 
-//Middelware
+//Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -48,26 +48,10 @@ app.use('/create', create);
 app.use('/practice', practice);
 app.use('/race', race)
 app.use('/room', room)
-
-app.get("/test", async (req, res) => {
-    try {
-        const getProducts = await db.query(q.Map(
-            q.Paginate(
-                q.Match(q.Index("all_products"))
-            ),
-            q.Lambda("X", q.Get(q.Var("X")))
-        ));
-        res.status(200).json(getProducts);
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-    // res.render("pages/test", test);
-});
-
 app.get('*', (req, res) => { res.status(404).render('pages/404'); });
 
 
-//start server
+//Listen on the port
 http.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });

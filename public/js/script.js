@@ -7,12 +7,12 @@ const mistakeTag = document.querySelector('.mistakes span');
 const wpmTag = document.querySelector('.wpm span');
 const cpmTag = document.querySelector('.cpm span');
 
+const socket = io();
+
 let timer,
     maxTime = 60,
     timeLeft = maxTime,
     charIndex = mistakes = isTyping = progress = 0;
-
-
 
 
 function loadParagraph() {
@@ -56,10 +56,10 @@ function initTyping() {
         characters.forEach(span => span.classList.remove("active"));
         characters[charIndex].classList.add("active");
 
-        // Progress bar implementation\
+        // Progress bar implementation
         let paraLength = text_fieldTag.innerText.length;
         progress = charIndex / (paraLength - 1);
-        console.log(progress);
+        // console.log(progress);
 
         // document.querySelector("#practice-prog").innerText = Math.ceil(progress * 100) + "%";
         document.querySelector("#practice-prog").style.width = Math.ceil(progress * 100) + "%"; //updating the progress bar
@@ -75,6 +75,7 @@ function initTyping() {
         inpFieldTag.value = "";
     }
     if (progress == 1) {
+        console.log(wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText);
         document.querySelector(`.winning-text`).classList.remove('d-none');
     }
 }

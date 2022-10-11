@@ -16270,10 +16270,10 @@ let quotes = [{
     "quoteAuthor": "Tom Jackson"
 }]
 
-const { db, q } = require('./db')
+const { quotesdb, q } = require('./db')
 const getAllQuotes = async () => {
     try {
-        const getQuotes = await db.query(q.Map(
+        const getQuotes = await quotesdb.query(q.Map(
             q.Paginate(
                 q.Match(q.Index("all_quotes"))
             ),
@@ -16284,19 +16284,61 @@ const getAllQuotes = async () => {
         console.log({ error: e.message });
     }
 };
-getAllQuotes();
+// getAllQuotes();
 
 
 
+const getQuoteCount = async () => {
+    try {
+        const getQuoteCount = await quotesdb.query(q.Count(
+            q.Match(q.Index("all_quotes"))
+        ))
+        return getQuoteCount
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+
+const getQuote = async () => {
+    try {
+        const getQuote = await quotesdb.query(q.Map(
+            q.Paginate(
+                q.Match(q.Index("quote_by_quoteid"), Math.floor(Math.random() * await getQuoteCount()))
+            ),
+            q.Lambda("X", q.Get(q.Var("X")))
+        ))
+        console.log(getQuote.data[0].ref);
+    } catch (e) {
+        console.log({ error: e.message });
+    }
+};
+
+getQuote();
 
 
+// const test = async () => {
+//     try {
+//         const getQuote = await quotesdb.query(q.Map(
+//             q.Paginate(q.Documents(q.Collection('quotes')), { size: 600 }),
+//             q.Lambda('x', q.Get(q.Var('x')))
+//         ));
+//         console.log(getQuote.data);
+//     } catch (e) {
+//         console.log({ error: e.message });
+//     }
+// };
+// test();
 
 
-
+// const getQuote = await quotesdb.query(q.Map(
+//     q.Paginate(q.Documents(q.Collection('quotes')), { size: 600 }),
+//     q.Lambda('x', q.Get(q.Var('x')))
+// ));
 //THIS HAS BEEN USED AND COMMENTED.
 // const createQuote = async (quote) => {
+//     quote.id = quotes.indexOf(quote) + 1;
 //     try {
-//         const createQuote = await db.query(q.Create(
+//         const createQuote = await quotesdb.query(q.Create(
 //             q.Collection("quotes"),
 //             { data: quote }
 //         ))
@@ -16307,4 +16349,5 @@ getAllQuotes();
 // };
 // quotes.forEach(quote => {
 //     createQuote(quote)
+//     // console.log(quote)
 // })
