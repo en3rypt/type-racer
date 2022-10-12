@@ -50,6 +50,10 @@ app.use('/practice', requireAuth, practice);
 app.use('/race', requireAuth, race)
 app.use('/room', requireAuth, room)
 app.use('/profile', requireAuth, profile);
+app.get('/logout', (req, res) => {
+    res.clearCookie('typio_access_token').redirect('/login');
+})
+
 app.get('*', (req, res) => { res.status(404).render('pages/404'); });
 
 
