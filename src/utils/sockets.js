@@ -121,6 +121,8 @@ module.exports = (io) => {
                         q.Ref(q.Collection('games'), await getGameCount() + 1),
                         {
                             data: {
+                                username: username,
+                                quoteid: quoteid,
                                 user: String(await usersdb.query(q.Call(q.Function("getUser"), username))),
                                 quote: String(await quotesdb.query(q.Call(q.Function("getQuoteFromId"), quoteid))),
                                 wpm: wpm,
@@ -131,18 +133,12 @@ module.exports = (io) => {
                     )
                 )
                 const updatedScore = await usersdb.query(
-                    q.Update(
-                        q.Ref(q.Collection('users'), username),
-                        {
-                            data: {
-                                score: q.Add(q.Select(["data", "score"], q.Get(q.Ref(q.Collection('users'), username))), score),
-                                games: q.Append(createdGame.ref, q.Select(["data", "games"], q.Get(q.Ref(q.Collection('users'), username)))),
-                            },
-                        },
-                    )
+                    q.Update(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))), {
+                        data: {
+                            score: q.Add(q.Select(["data", "score"], q.Get(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))))), score)
+                        }
+                    })
                 )
-
-                console.log(createdGame);
             }
             catch (e) {
                 console.log({ error: e });
