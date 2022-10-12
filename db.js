@@ -6,7 +6,7 @@ const faunadb = require('faunadb'),
 
 const typiodb = new faunadb.Client({
     secret: process.env.TYPIO_SECRET,
-    domain: 'db.us.fauna.com',
+    endpoint: 'https://db.fauna.com/',
 });
 
 const quotesdb = new faunadb.Client({

@@ -25,26 +25,40 @@ signup.post('/', async (req, res) => {
         res.render('pages/signup', { error: 'Passwords do not match' });
     } else {
         try {
-            const users = await usersdb.query(
-                q.Paginate(q.Match(q.Index('username_by_user'))),
+            console.log('hello');
+            let users = await usersdb.query(
+                q.Paginate(
+                    q.Match(q.Index("user_by_username"), username)
+                ),
             );
-            if (users.data.includes(username)) {
+            if (users.data.length == 1) {
                 res.render('pages/signup', { error: 'Username already exists' });
             } else {
-                const createdUser = await usersdb.query(
-                    q.Create(
-                        q.Ref(q.Collection('users'), await getuserCount() + 1),
-                        {
-                            data: {
-                                username: username,
-                                email: email,
-                                password: password,
-                            }
-                        }
-                    )
+                users = await usersdb.query(
+                    q.Paginate(
+                        q.Match(q.Index("user_by_email"), email)
+                    ),
                 );
-                // console.log(createdUser);
-                res.render('pages/signup', { error: 'User created' });
+                if (users.data.length == 1) {
+                    res.render('pages/signup', { error: 'Email already exists' });
+                } else {
+                    const createdUser = await usersdb.query(
+                        q.Create(
+                            q.Ref(q.Collection('users'), await getuserCount() + 1),
+                            {
+                                credentials: {
+                                    password: password
+                                },
+                                data: {
+                                    username: username,
+                                    email: email,
+
+                                }
+                            }
+                        )
+                    );
+                    res.render('pages/signup', { error: 'User created' });
+                }
             }
         }
         catch (e) {

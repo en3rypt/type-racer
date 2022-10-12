@@ -1,6 +1,7 @@
 const login = require('express').Router();
 const { usersdb, q } = require('../../db');
 const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
 
 login.get('/', async (req, res) => {
     res.render('pages/login', { error: '' });
@@ -9,28 +10,30 @@ login.get('/', async (req, res) => {
 login.post('/', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const users = await usersdb.query(
-            q.Paginate(q.Match(q.Index('username_by_user'))),
-        );
-        if (users.data.includes(username)) {
-            const user = await usersdb.query(q.Map(
-                q.Paginate(
-                    q.Match(q.Index("user_by_username"), username)
-                ),
-                q.Lambda("X", q.Get(q.Var("X")))
-            )
-            );
-            if (user.data[0].data.password === password) {
-                res.render('pages/login', { error: 'User can be logged in.' });
-            } else {
-                res.render('pages/login', { error: 'Wrong password.' });
-            }
-        } else {
-            res.render('pages/login', { error: 'Username does not exist.' });
+
+        const user = await usersdb.query(
+            q.Login(q.Match(q.Index('user_by_username'), username), { password: password },))
+        console.log(user);
+
+        var payload = {
+            username: username,
+            user: user
         }
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+        // console.log(token);
+        // res.locals.username = username;
+        return res.cookie("typio_access_token", token, {
+            httpOnly: true,
+            maxAge: 86400000,
+        }).status(200).redirect('/');
+
     }
     catch (e) {
-        console.log({ error: e.message });
+        if (e.message == 'authentication failed') {
+            res.render('pages/login', { error: 'Username or password doesnot match.' });
+        } else {
+            res.render('pages/login', { error: e.message });
+        }
     }
 })
 module.exports = login;

@@ -16404,7 +16404,7 @@ const createGame = async (game) => {
             q.Create(
                 q.Ref(q.Collection('games'), await getGameCount() + 1),
                 {
-                    data: gameDate,
+                    data: gameData,
                 },
             )
         )

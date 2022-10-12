@@ -5,8 +5,9 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser");
 const session = require('express-session');
-
+const { requireAuth, checkUser } = require('./middleware/auth');
 //Environment variables
 require('dotenv').config();
 
@@ -32,23 +33,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: true,
-    resave: false
-}));
+app.use(cookieParser());
+
 
 
 //Routing
-app.get('/', (req, res) => { res.render('pages/index'); });
-app.use('/signup', signup);
-app.use('/login', login);
-app.use('/about', about);
-app.use('/create', create);
-app.use('/practice', practice);
-app.use('/race', race)
-app.use('/room', room)
-app.get('/profile', (req, res) => { res.render('pages/profile'); });
+// app.get('*', checkUser);
+app.get('/', requireAuth, (req, res) => { res.render('pages/index'); });
+app.use('/signup', checkUser, signup);
+app.use('/login', checkUser, login);
+app.use('/about', requireAuth, about);
+app.use('/create', requireAuth, create);
+app.use('/practice', requireAuth, practice);
+app.use('/race', requireAuth, race)
+app.use('/room', requireAuth, room)
+app.get('/profile', requireAuth, (req, res) => { res.render('pages/profile'); });
 app.get('*', (req, res) => { res.status(404).render('pages/404'); });
 
 
