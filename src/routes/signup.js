@@ -53,6 +53,9 @@ signup.post('/', async (req, res) => {
                                     username: username,
                                     email: email,
                                     score: 0,
+                                    trackcount: 0,
+                                    highestwpm: 0,
+                                    avgwpm: 0,
                                 }
                             }
                         )
