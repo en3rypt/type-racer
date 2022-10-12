@@ -16311,9 +16311,9 @@ const createQuote = async (quote, ref) => {
         console.log({ error: e.message });
     }
 };
-quotes.forEach((quote) => {
-    createQuote(quote, quotes.indexOf(quote) + 1)
-})
+// quotes.forEach((quote) => {
+//     createQuote(quote, quotes.indexOf(quote) + 1)
+// })
 
 
 
@@ -16354,19 +16354,16 @@ const createUser = async (user) => {
 
 const getUser = async (username) => {
     try {
-        const getUser = await usersdb.query(q.Map(
-            q.Paginate(
-                q.Match(q.Index("user_by_username"), username)
-            ),
-            q.Lambda("X", q.Get(q.Var("X")))
-        ));
-        console.log(getUser.data[0].ref);
+        const getUser = await usersdb.query(
+            q.Call(q.Function("getUser"), username)
+        );
+        console.log(typeof getUser);
     } catch (e) {
         console.log({ error: e.message });
     }
 };
 
-
+getUser("3ncrypt");
 
 
 //////////////////////////////////////////

@@ -52,7 +52,7 @@ signup.post('/', async (req, res) => {
                                 data: {
                                     username: username,
                                     email: email,
-
+                                    score: 0,
                                 }
                             }
                         )

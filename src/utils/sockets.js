@@ -2,6 +2,7 @@ module.exports = (io) => {
     io.on('connection', (socket) => {
         const rooms = require('./rooms');
         const setPosition = require('./setPosition');
+        const { typiodb, usersdb, quotesdb, q } = require('../../db');
         //new code
         socket.on('new-user', (room, name) => {
             let id = socket.id
@@ -97,14 +98,56 @@ module.exports = (io) => {
             io.to(room).emit('progressBroadcast', rooms[room].users, socket.id);
 
         });
-        socket.on('practiceEnd', (wpm, mistake, cpm, timeleft, totalLetters) => {
-            console.log(wpm, mistake, cpm, timeleft);
-            let score1 = wpm - (mistake * 2) - (cpm / 10) - (timeleft / 10);
-            let score2 = wpm - (mistake * 2) + (timeleft / 10);
-            let score3 = (wpm - (mistake * 2)) * timeleft;
-            let score4 = (wpm - (mistake)) * timeleft;
+        socket.on('practiceEnd', async (wpm, mistake, cpm, timeleft, totalLetters, uandq) => {
+            let score = 0
+            if ((wpm - (mistake)) * timeleft > 0)
+                score = (wpm - (mistake)) * timeleft;
             let accuracy = ((totalLetters - mistake) / totalLetters) * 100;
-            console.log(score1, score2, score3, score4, accuracy);
+            let username = uandq.split('-')[0];
+            let quoteid = uandq.split('-')[1];
+            try {
+                const getGameCount = async () => {
+                    try {
+                        const getGameCount = await typiodb.query(q.Count(
+                            q.Match(q.Index("all_games"))
+                        ))
+                        return getGameCount
+                    } catch (e) {
+                        console.log({ error: e.message });
+                    }
+                };
+                const createdGame = await typiodb.query(
+                    q.Create(
+                        q.Ref(q.Collection('games'), await getGameCount() + 1),
+                        {
+                            data: {
+                                user: String(await usersdb.query(q.Call(q.Function("getUser"), username))),
+                                quote: String(await quotesdb.query(q.Call(q.Function("getQuoteFromId"), quoteid))),
+                                wpm: wpm,
+                                score: score,
+                                accuracy: accuracy,
+                            },
+                        },
+                    )
+                )
+                const updatedScore = await usersdb.query(
+                    q.Update(
+                        q.Ref(q.Collection('users'), username),
+                        {
+                            data: {
+                                score: q.Add(q.Select(["data", "score"], q.Get(q.Ref(q.Collection('users'), username))), score),
+                                games: q.Append(createdGame.ref, q.Select(["data", "games"], q.Get(q.Ref(q.Collection('users'), username)))),
+                            },
+                        },
+                    )
+                )
+
+                console.log(createdGame);
+            }
+            catch (e) {
+                console.log({ error: e });
+            }
+
         });
         socket.on('disconnect', () => {
             let room;

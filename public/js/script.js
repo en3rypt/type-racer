@@ -77,7 +77,7 @@ function initTyping() {
     }
     if (progress == 1 && !practiceEnd) {
         document.querySelector(`.winning-text`).classList.remove('d-none');
-        socket.emit('practiceEnd', wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText, timeTag.innerText, totalLetters);
+        socket.emit('practiceEnd', wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText, timeTag.innerText, totalLetters, document.querySelector('.typing-text p').id);
         practiceEnd = true;
     }
 }
@@ -90,7 +90,7 @@ function initTimer() {
         wpmTag.innerText = wpm;
     } else {
         document.querySelector(`.losing-text`).classList.remove('d-none');
-        socket.emit('practiceEnd', wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText, -1, totalLetters);
+        socket.emit('practiceEnd', wpmTag.innerText, mistakeTag.innerText, cpmTag.innerText, -1, totalLetters, document.querySelector('.typing-text p').id);
         clearInterval(timer);
         practiceEnd = true;
     }

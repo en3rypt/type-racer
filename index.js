@@ -7,7 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const session = require('express-session');
-const { requireAuth, checkUser } = require('./middleware/auth');
+const { requireAuth, checkUser } = require('./src/middleware/auth');
 //Environment variables
 require('dotenv').config();
 
@@ -22,7 +22,8 @@ const create = require('./src/routes/create');
 const practice = require('./src/routes/practice');
 const race = require('./src/routes/race');
 const room = require('./src/routes/room');
-
+const profile = require('./src/routes/profile');
+const logout = require('./src/routes/logout');
 
 //socket connection
 require('./src/utils/sockets')(io);
@@ -42,12 +43,13 @@ app.use(cookieParser());
 app.get('/', requireAuth, (req, res) => { res.render('pages/index'); });
 app.use('/signup', checkUser, signup);
 app.use('/login', checkUser, login);
+app.use('/logout', requireAuth, logout);
 app.use('/about', requireAuth, about);
 app.use('/create', requireAuth, create);
 app.use('/practice', requireAuth, practice);
 app.use('/race', requireAuth, race)
 app.use('/room', requireAuth, room)
-app.get('/profile', requireAuth, (req, res) => { res.render('pages/profile'); });
+app.use('/profile', requireAuth, profile);
 app.get('*', (req, res) => { res.status(404).render('pages/404'); });
 
 
