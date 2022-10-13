@@ -3,7 +3,8 @@
 
 <head>
     <%- include('../partials/head'); %>
-        <title>About Us</title>
+        <title>Profile | <%= username %>
+        </title>
         <style>
             div {
                 border: red;
@@ -83,7 +84,8 @@
                 <h3>Global Positioning:</h3>
             </div>
             <div class="col-lg-6" style="float: right;">
-                <h3>#69</h3>
+                <h3>#<%= rank %>
+                </h3>
             </div>
         </div>
         <div class="row mt-4">
@@ -102,7 +104,7 @@
             </div>
             <div class="col-lg-6" style="float: right;">
                 <h3>
-                    <%= user.avgwpm %>
+                    <%= averageWPM %>
                 </h3>
             </div>
         </div>
@@ -112,7 +114,7 @@
             </div>
             <div class="col-lg-6" style="float: right;">
                 <h3>
-                    <%= user.highestwpm %>
+                    <%= highestWPM %>
                 </h3>
             </div>
         </div>
@@ -122,7 +124,7 @@
             </div>
             <div class="col-lg-6" style="float: right;">
                 <h3>
-                    <%= user.avgwpm %>
+                    <%= gameCount %>
                 </h3>
             </div>
         </div>

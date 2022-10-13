@@ -25,7 +25,6 @@ signup.post('/', async (req, res) => {
         res.render('pages/signup', { error: 'Passwords do not match' });
     } else {
         try {
-            console.log('hello');
             let users = await usersdb.query(
                 q.Paginate(
                     q.Match(q.Index("user_by_username"), username)

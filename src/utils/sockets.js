@@ -125,9 +125,9 @@ module.exports = (io) => {
                                 quoteid: quoteid,
                                 user: String(await usersdb.query(q.Call(q.Function("getUser"), username))),
                                 quote: String(await quotesdb.query(q.Call(q.Function("getQuoteFromId"), quoteid))),
-                                wpm: wpm,
-                                score: score,
-                                accuracy: accuracy,
+                                wpm: parseInt(wpm),
+                                score: parseInt(score),
+                                accuracy: parseFloat(accuracy),
                             },
                         },
                     )

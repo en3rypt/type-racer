@@ -13,7 +13,6 @@ login.post('/', async (req, res) => {
 
         const user = await usersdb.query(
             q.Login(q.Match(q.Index('user_by_username'), username), { password: password },))
-        console.log(user);
 
         var payload = {
             username: username,
