@@ -24,8 +24,8 @@ const race = require('./src/routes/race');
 const room = require('./src/routes/room');
 const profile = require('./src/routes/profile');
 const logout = require('./src/routes/logout');
+const leaderBoard = require('./src/routes/leaderboard')
 
-//const leaderBoard= require('./src/routes/leaderboard')
 //socket connection
 require('./src/utils/sockets')(io);
 
@@ -48,10 +48,10 @@ app.use('/logout', requireAuth, logout);
 app.use('/about', requireAuth, about);
 app.use('/create', requireAuth, create);
 app.use('/practice', requireAuth, practice);
-app.use('/race', requireAuth, race)
-app.use('/room', requireAuth, room)
+app.use('/race', requireAuth, race);
+app.use('/room', requireAuth, room);
 app.use('/profile', requireAuth, profile);
-app.use('/logout', requireAuth, logout);
+app.use('/leaderboard', requireAuth, leaderboard);
 app.get('*', (req, res) => { res.status(404).render('pages/404'); });
 
 
