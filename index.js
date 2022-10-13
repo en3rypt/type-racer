@@ -25,6 +25,7 @@ const room = require('./src/routes/room');
 const profile = require('./src/routes/profile');
 const logout = require('./src/routes/logout');
 
+//const leaderBoard= require('./src/routes/leaderboard')
 //socket connection
 require('./src/utils/sockets')(io);
 
