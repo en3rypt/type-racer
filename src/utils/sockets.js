@@ -135,6 +135,14 @@ module.exports = (io) => {
                                 }
                             )
                         );
+                        const updatedScore = await usersdb.query(
+                            q.Update(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))), {
+                                data: {
+                                    score: q.Add(q.Select(["data", "score"], q.Get(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))))), (score - getGame.data.score))
+                                }
+                            })
+                        )
+
                     }
                 }
                 else {
