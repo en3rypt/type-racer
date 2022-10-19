@@ -11,17 +11,22 @@
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/about">About Us</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="/race">Lets Race!</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="/practice">Practice</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="/about">About Us</a>
-                </li>
 
 
                 <% if (locals.username) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/leaderboard">
+                            Leaderboard
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/profile/<%= username %>">
                             <%= username %>

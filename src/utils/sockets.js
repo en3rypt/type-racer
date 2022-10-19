@@ -106,39 +106,80 @@ module.exports = (io) => {
             let username = uandq.split('-')[0];
             let quoteid = uandq.split('-')[1];
             try {
-                const getGameCount = async () => {
-                    try {
-                        const getGameCount = await typiodb.query(q.Count(
-                            q.Match(q.Index("all_games"))
-                        ))
-                        return getGameCount
-                    } catch (e) {
-                        console.log({ error: e.message });
-                    }
-                };
-                const createdGame = await typiodb.query(
-                    q.Create(
-                        q.Ref(q.Collection('games'), await getGameCount() + 1),
-                        {
-                            data: {
-                                username: username,
-                                quoteid: quoteid,
-                                user: String(await usersdb.query(q.Call(q.Function("getUser"), username))),
-                                quote: String(await quotesdb.query(q.Call(q.Function("getQuoteFromId"), quoteid))),
-                                wpm: parseInt(wpm),
-                                score: parseInt(score),
-                                accuracy: parseFloat(accuracy),
-                            },
-                        },
+
+                let getGame = await typiodb.query(
+                    q.Count(
+                        q.Match(
+                            q.Index('game_by_quoteid_and_username'), quoteid, username
+                        )
                     )
-                )
-                const updatedScore = await usersdb.query(
-                    q.Update(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))), {
-                        data: {
-                            score: q.Add(q.Select(["data", "score"], q.Get(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))))), score)
+                );
+                if (getGame > 0) {
+                    getGame = await typiodb.query(
+                        q.Get(
+                            q.Match(
+                                q.Index('game_by_quoteid_and_username'), quoteid, username
+                            )
+                        )
+                    );
+                    if (getGame.data.score < score) {
+                        const updateGame = await typiodb.query(
+                            q.Update(
+                                q.Ref(q.Collection('games'), getGame.ref.id),
+                                {
+                                    data: {
+                                        wpm: parseInt(wpm),
+                                        score: parseInt(score),
+                                        accuracy: parseFloat(accuracy),
+                                    }
+                                }
+                            )
+                        );
+                        const updatedScore = await usersdb.query(
+                            q.Update(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))), {
+                                data: {
+                                    score: q.Add(q.Select(["data", "score"], q.Get(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))))), (score - getGame.data.score))
+                                }
+                            })
+                        )
+
+                    }
+                }
+                else {
+                    const getGameCount = async () => {
+                        try {
+                            const getGameCount = await typiodb.query(q.Count(
+                                q.Match(q.Index("all_games"))
+                            ))
+                            return getGameCount
+                        } catch (e) {
+                            console.log({ error: e.message });
                         }
-                    })
-                )
+                    };
+                    const createdGame = await typiodb.query(
+                        q.Create(
+                            q.Ref(q.Collection('games'), await getGameCount() + 1),
+                            {
+                                data: {
+                                    username: username,
+                                    quoteid: quoteid,
+                                    user: String(await usersdb.query(q.Call(q.Function("getUser"), username))),
+                                    quote: String(await quotesdb.query(q.Call(q.Function("getQuoteFromId"), quoteid))),
+                                    wpm: parseInt(wpm),
+                                    score: parseInt(score),
+                                    accuracy: parseFloat(accuracy),
+                                },
+                            },
+                        )
+                    )
+                    const updatedScore = await usersdb.query(
+                        q.Update(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))), {
+                            data: {
+                                score: q.Add(q.Select(["data", "score"], q.Get(q.Select("ref", q.Get(q.Match(q.Index("user_by_username"), username))))), score)
+                            }
+                        })
+                    )
+                }
             }
             catch (e) {
                 console.log({ error: e });
