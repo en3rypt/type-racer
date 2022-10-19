@@ -58,6 +58,6 @@ Alternately, to quickly try out this repo in the cloud, you can click on => [![t
 - `db.js` - This file contains the functions for interacting with the database.
 - `public/` - This folder contains all the frontend assets, scripts, etc..
 - `src/routes/` - This folder contains the route definitions for our API.
-- `src/middleware` - This folder contains the middleware used in the app.
-- `src/utils` - This folder contains the utility/helper function definitions for our API.
+- `src/middleware/` - This folder contains the middleware used in the app.
+- `src/utils/` - This folder contains the utility/helper function definitions for our API.
 - `views/` - This folder contains the view templates that are rendered by our routes.
