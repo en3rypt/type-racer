@@ -16,25 +16,28 @@
                 <h2>People on top of the world of keyboards</h2>
             </div>
         </div>
-        <% for(i=0; i< leaderboard.length(); i++) { %>
+        <% for(i=0; i< leaderboard.length; i++) { %>
             <div class="row text-center">
-                <div class="col">
+                <div class="col-4">
                     <h4>
                         <%= i+1 %>
                     </h4>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <h4>
-                        <%= leaderboard[i][1] %>
+                        <a style="color: #212529;" href="/profile/<%= leaderboard[i][1] %>">
+                            <%= leaderboard[i][1] %>
+                        </a>
+
                     </h4>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <h4>
                         <%= leaderboard[i][0] %>
                     </h4>
                 </div>
-                <% } %>
             </div>
+            <% } %>
     </div>
 
     <%- include('../partials/footer'); %>

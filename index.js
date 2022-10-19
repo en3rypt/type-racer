@@ -24,7 +24,7 @@ const race = require('./src/routes/race');
 const room = require('./src/routes/room');
 const profile = require('./src/routes/profile');
 const logout = require('./src/routes/logout');
-const leaderBoard = require('./src/routes/leaderboard')
+const leaderboard = require('./src/routes/leaderboard')
 
 //socket connection
 require('./src/utils/sockets')(io);
