@@ -18,10 +18,10 @@ profile.get('/:username', requireAuth, async (req, res) => {
         const rank = sortedScore.data.findIndex((user) => user[1] === username) + 1;
         if (gameCount) {
             const highestWPM = await typiodb.query(
-                q.Max(q.Paginate(q.Match(q.Index('wpm_by_username'), username)))
+                q.Max(q.Paginate(q.Match(q.Index('wpm_by_username_sort_by_wpm_desc'), username)))
             )
             const averageWPM = await typiodb.query(
-                q.Mean(q.Paginate(q.Match(q.Index('wpm_by_username'), username)))
+                q.Mean(q.Paginate(q.Match(q.Index('wpm_by_username_sort_by_wpm_desc'), username)))
             )
             res.render('pages/profile', { user: user.data, gameCount: gameCount, highestWPM: highestWPM.data, averageWPM: averageWPM.data, rank: rank });
         }
