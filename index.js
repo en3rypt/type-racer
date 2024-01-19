@@ -1,5 +1,6 @@
 //npm modules
 const express = require('express');
+const path = require('path');
 const app = express();
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
@@ -28,6 +29,8 @@ const leaderboard = require('./src/routes/leaderboard')
 
 //socket connection
 require('./src/utils/sockets')(io);
+
+app.set('views', path.join(__dirname, 'views'));
 
 //Middleware
 app.use(bodyParser.json());
