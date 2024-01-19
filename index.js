@@ -31,6 +31,7 @@ const leaderboard = require('./src/routes/leaderboard')
 require('./src/utils/sockets')(io);
 
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, "public")));
 
 //Middleware
 app.use(bodyParser.json());
